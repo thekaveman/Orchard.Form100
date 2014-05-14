@@ -74,31 +74,37 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Orchard.Core">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Orchard.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Framework">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Orchard.Framework.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Drivers\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\ActionPartHandler.cs" />
+    <Compile Include="Handlers\EmployeePartHandler.cs" />
+    <Compile Include="Handlers\ReviewPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
     <Compile Include="Models\ActionType.cs" />
-    <Compile Include="Models\ApprovalRecord.cs" />
+    <Compile Include="Models\ReviewApprovalRecord.cs" />
     <Compile Include="Models\EmployeePart.cs" />
     <Compile Include="Models\EmployeePartRecord.cs" />
     <Compile Include="Models\JobClassRecord.cs" />
     <Compile Include="Models\ReviewPart.cs" />
     <Compile Include="Models\ReviewPartRecord.cs" />
     <Compile Include="Models\WorkflowStatus.cs" />
+    <Compile Include="Services\ReviewApprovalService.cs" />
+    <Compile Include="Services\IReviewApprovalService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
