@@ -88,6 +88,7 @@
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations.cs" />
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
     <Compile Include="Models\ActionType.cs" />

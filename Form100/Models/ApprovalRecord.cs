@@ -11,5 +11,10 @@ namespace CSM.Form100.Models
         public virtual DateTime? DateOfApproval { get; set; }
 
         public virtual string Approver { get; set; }
+
+        public ApprovalRecord()
+        {
+            IsApproved = false;
+        }
     }
 }
