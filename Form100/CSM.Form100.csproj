@@ -75,17 +75,19 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Drivers\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\ActionPartDriver.cs" />
+    <Compile Include="Drivers\EmployeePartDriver.cs" />
+    <Compile Include="Drivers\ReviewPartDriver.cs" />
     <Compile Include="Handlers\ActionPartHandler.cs" />
     <Compile Include="Handlers\EmployeePartHandler.cs" />
     <Compile Include="Handlers\ReviewPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
-    <Compile Include="Models\ActionType.cs" />
+    <Compile Include="Models\ActionCategory.cs" />
     <Compile Include="Models\ReviewApprovalRecord.cs" />
     <Compile Include="Models\EmployeePart.cs" />
     <Compile Include="Models\EmployeePartRecord.cs" />
