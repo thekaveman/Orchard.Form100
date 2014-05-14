@@ -1,0 +1,10 @@
+﻿Name: CSM.Form100
+AntiForgery: enabled
+Author: City of Santa Monica
+Category: Personnel Management
+Website: http://www.smgov.net
+Version: 1.0
+OrchardVersion: 1.8
+Features:
+    CSM.Form100:
+        Description: The Personnel Action Form Workflow
