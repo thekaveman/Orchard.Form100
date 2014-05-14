@@ -6,17 +6,12 @@ namespace CSM.Form100.Models
 {
     public class ReviewPart : ContentPart<ReviewPartRecord>
     {
-        private readonly LazyField<IList<ApprovalRecord>> _approvalsField = new LazyField<IList<ApprovalRecord>>();
-
-        public LazyField<IList<ApprovalRecord>> ApprovalsField
+        internal readonly LazyField<IList<ReviewApprovalRecord>> ApprovalsField = new LazyField<IList<ReviewApprovalRecord>>();
+        
+        public IList<ReviewApprovalRecord> Approvals
         {
-            get { return _approvalsField; }
-        }
-
-        public IList<ApprovalRecord> Approvals
-        {
-            get { return _approvalsField.Value; }
-            set { _approvalsField.Value = value; }
+            get { return ApprovalsField.Value; }
+            set { ApprovalsField.Value = value; }
         }
 
         public WorkflowStatus Status

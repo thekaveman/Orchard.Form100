@@ -2,7 +2,7 @@
 
 namespace CSM.Form100.Models
 {
-    public class ApprovalRecord
+    public class ReviewApprovalRecord
     {
         public virtual int Id { get; set; }
 
@@ -12,7 +12,7 @@ namespace CSM.Form100.Models
 
         public virtual string Approver { get; set; }
 
-        public ApprovalRecord()
+        public ReviewApprovalRecord()
         {
             IsApproved = false;
         }

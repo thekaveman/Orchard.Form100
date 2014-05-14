@@ -7,11 +7,11 @@ namespace CSM.Form100.Models
     {
         public virtual WorkflowStatus Status { get; set; }
 
-        public virtual IList<ApprovalRecord> Approvals { get; set; }
+        public virtual IList<int> ApprovalIds { get; set; }
 
         public ReviewPartRecord()
         {
-            Approvals = new List<ApprovalRecord>();
+            ApprovalIds = new List<int>();
         }
     }
 }
