@@ -85,8 +85,19 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
     <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\ActionPart.cs" />
+    <Compile Include="Models\ActionPartRecord.cs" />
+    <Compile Include="Models\ActionType.cs" />
+    <Compile Include="Models\ApprovalRecord.cs" />
+    <Compile Include="Models\EmployeePart.cs" />
+    <Compile Include="Models\EmployeePartRecord.cs" />
+    <Compile Include="Models\JobClassRecord.cs" />
+    <Compile Include="Models\ReviewPart.cs" />
+    <Compile Include="Models\ReviewPartRecord.cs" />
+    <Compile Include="Models\WorkflowStatus.cs" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

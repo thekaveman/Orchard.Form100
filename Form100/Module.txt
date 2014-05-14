@@ -1,7 +1,7 @@
 ﻿Name: CSM.Form100
 AntiForgery: enabled
 Author: City of Santa Monica
-Category: Personnel Management
+Category: CSM
 Website: http://www.smgov.net
 Version: 1.0
 OrchardVersion: 1.8
