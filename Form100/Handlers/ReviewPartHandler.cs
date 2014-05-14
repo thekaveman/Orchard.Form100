@@ -13,7 +13,6 @@ namespace CSM.Form100.Handlers
     {
         public ReviewPartHandler(IRepository<ReviewPartRecord> repository, IReviewApprovalService reviewApprovalService)
         {
-            // *conventional* way to configure persistence for *PartRecord backing classes
             Filters.Add(StorageFilter.For(repository));
 
             OnActivated<ReviewPart>((context, reviewPart) => {

@@ -9,7 +9,6 @@ namespace CSM.Form100.Handlers
     {
         public ActionPartHandler(IRepository<ActionPartRecord> repository)
         {
-            // *conventional* way to configure persistence for *PartRecord backing classes
             Filters.Add(StorageFilter.For(repository));
         }
     }

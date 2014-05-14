@@ -9,7 +9,6 @@ namespace CSM.Form100.Handlers
     {
         public EmployeePartHandler(IRepository<EmployeePartRecord> repository)
         {
-            // *conventional* way to configure persistence for *PartRecord backing classes
             Filters.Add(StorageFilter.For(repository));
         }
     }
