@@ -11,10 +11,10 @@ namespace CSM.Form100.Models
             set { Store(a => a.EffectiveDate, value); }
         }
 
-        public ActionType Type
+        public ActionCategory Category
         {
-            get { return Retrieve(a => a.Type); }
-            set { Store(a => a.Type, value); }
+            get { return Retrieve(a => a.Category); }
+            set { Store(a => a.Category, value); }
         }
 
         public string Label

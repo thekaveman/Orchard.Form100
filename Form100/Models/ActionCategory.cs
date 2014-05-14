@@ -2,7 +2,7 @@
 
 namespace CSM.Form100.Models
 {
-    public enum ActionType
+    public enum ActionCategory
     {
         [Description("Undefined")]
         Undefined,

@@ -8,7 +8,7 @@ namespace CSM.Form100.Models
     {
         public virtual DateTime? EffectiveDate { get; set; }
 
-        public virtual ActionType Type { get; set; }
+        public virtual ActionCategory Category { get; set; }
 
         [StringLengthMax]
         public virtual string Label { get; set; }
@@ -18,7 +18,7 @@ namespace CSM.Form100.Models
 
         public ActionPartRecord()
         {
-            Type = ActionType.Undefined;
+            Category = ActionCategory.Undefined;
         }
     }
 }
