@@ -1,5 +1,7 @@
 ﻿using System;
 using CSM.Form100.Models;
+using CSM.Form100.Services;
+using CSM.Form100.ViewModels;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 
@@ -10,14 +12,21 @@ namespace CSM.Form100.Drivers
     {
         private readonly string dateFormat = "yyyy-dd-MM";
 
+        private readonly IActionService actionService;
+
+        public ActionPartDriver(IActionService actionService)
+        {
+            this.actionService = actionService;
+        }
+
         protected override string Prefix
         {
             get { return "Action"; }
         }
 
         /// <summary>
-        /// Respond to requests to display data from this part
-        /// e.g. return a bunch of so called "display" shapes
+        /// Respond to GET requests to display data from this part.
+        /// e.g. return a bunch of "display" shapes
         /// </summary>
         protected override DriverResult Display(ActionPart part, string displayType, dynamic shapeHelper)
         {
@@ -39,6 +48,65 @@ namespace CSM.Form100.Drivers
                     () => shapeHelper.Parts_Action_Detail(Detail: part.Detail)
                 )
             );
+        }
+
+        /// <summary>
+        /// Respond to GET requests for an edit view of this part.
+        /// e.g. return a bunch of "edit" shapes
+        /// </summary>
+        protected override DriverResult Editor(ActionPart part, dynamic shapeHelper)
+        {
+            var viewModel = actionService.GetViewModel(part);
+
+            return Combined(
+                ContentShape(
+                    "Parts_Action_EffectiveDate_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Action_EffectiveDate",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                ),
+                ContentShape(
+                    "Parts_Action_Category_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Action_Category",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                ),
+                ContentShape(
+                    "Parts_Action_Type_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Action_Type",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                ),
+                ContentShape(
+                    "Parts_Action_Detail_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Action_Detail",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                )
+            );
+        }
+
+        /// <summary>
+        /// Respond to POST requests for updating this part's data.
+        /// </summary>
+        protected override DriverResult Editor(ActionPart part, Orchard.ContentManagement.IUpdateModel updater, dynamic shapeHelper)
+        {
+            var viewModel = new ActionPartViewModel();
+
+            if(updater.TryUpdateModel(viewModel, Prefix, null, null))
+            {
+                actionService.Update(viewModel, part);
+            }
+
+            return Editor(part, shapeHelper);
         }
 
         /// <summary>
