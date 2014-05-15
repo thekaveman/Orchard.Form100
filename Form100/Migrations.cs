@@ -32,7 +32,7 @@ namespace CSM.Form100
                 table => table
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
                     .Column<bool>("IsApproved", col => col.NotNull())
-				    .Column<DateTime>("DateOfApproval", col => col.Nullable())
+                    .Column<DateTime>("ApprovalDate", col => col.Nullable())
                     .Column<string>("ApproverName", col => col.WithLength(RangeProvider.MaxStringLength))
 			);
 

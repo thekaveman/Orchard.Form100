@@ -17,10 +17,10 @@ namespace CSM.Form100.Models
             set { Store(a => a.Category, value); }
         }
 
-        public string Label
+        public string Type
         {
-            get { return Retrieve(a => a.Label); }
-            set { Store(a => a.Label, value); }
+            get { return Retrieve(a => a.Type); }
+            set { Store(a => a.Type, value); }
         }
 
         public string Detail

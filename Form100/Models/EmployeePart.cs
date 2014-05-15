@@ -22,16 +22,16 @@ namespace CSM.Form100.Models
             set { Store(e => e.LastName, value); }
         }
 
-        public JobStepRecord PriorJobClass
+        public JobStepRecord PriorJobStep
         {
-            get { return Retrieve(e => e.PriorJobClass); }
-            set { Store(e => e.PriorJobClass, value); }
+            get { return Retrieve(e => e.PriorJobStep); }
+            set { Store(e => e.PriorJobStep, value); }
         }
 
-        public JobStepRecord CurrentJobClass
+        public JobStepRecord CurrentJobStep
         {
-            get { return Retrieve(e => e.CurrentJobClass); }
-            set { Store(e => e.CurrentJobClass, value); }
+            get { return Retrieve(e => e.CurrentJobStep); }
+            set { Store(e => e.CurrentJobStep, value); }
         }
     }
 }

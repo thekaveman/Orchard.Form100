@@ -13,8 +13,8 @@ namespace CSM.Form100.Models
         [StringLength(128)]
         public virtual string LastName { get; set; }
 
-        public virtual JobStepRecord PriorJobClass { get; set; }
+        public virtual JobStepRecord PriorJobStep { get; set; }
 
-        public virtual JobStepRecord CurrentJobClass { get; set; }
+        public virtual JobStepRecord CurrentJobStep { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace CSM.Form100.Models
         public virtual ActionCategory Category { get; set; }
 
         [StringLengthMax]
-        public virtual string Label { get; set; }
+        public virtual string Type { get; set; }
 
         [StringLengthMax]
         public virtual string Detail { get; set; }

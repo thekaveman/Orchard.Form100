@@ -9,7 +9,7 @@ namespace CSM.Form100.Models
 
         public virtual bool IsApproved { get; set; }
 
-        public virtual DateTime? DateOfApproval { get; set; }
+        public virtual DateTime? ApprovalDate { get; set; }
 
         [StringLength(1024)]
         public virtual string ApproverName { get; set; }
