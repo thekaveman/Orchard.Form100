@@ -15,6 +15,10 @@ namespace CSM.Form100.Drivers
             get { return "Action"; }
         }
 
+        /// <summary>
+        /// Respond to requests to display data from this part
+        /// e.g. return a bunch of so called "display" shapes
+        /// </summary>
         protected override DriverResult Display(ActionPart part, string displayType, dynamic shapeHelper)
         {
             return Combined(
@@ -39,6 +43,7 @@ namespace CSM.Form100.Drivers
 
         /// <summary>
         /// Define how ActionPart data is exported.
+        /// Hint: it uses XML.
         /// </summary>
         protected override void Exporting(ActionPart part, ExportContentContext context)
         {
@@ -49,31 +54,7 @@ namespace CSM.Form100.Drivers
             actionNode.SetAttributeValue("Type", part.Type);
             actionNode.SetAttributeValue("Detail", part.Detail);
         }
-
-        ///// <summary>
-        ///// Define how StoryPart data is exported.
-        ///// </summary>
-        //protected override void Exporting(StoryPart part, ExportContentContext context)
-        //{
-        //    var storyNode = context.Element(part.PartDefinition.Name);
-
-        //    storyNode.SetAttributeValue("Location", part.Location.TrimSafe());
-        //    storyNode.SetAttributeValue("Summary", part.Summary.TrimSafe());
-        //    storyNode.SetAttributeValue("LegalAnalysis", part.LegalAnalysis.TrimSafe());
-        //    storyNode.SetAttributeValue("Votes", part.Votes);
-
-        //    // export the Contact as a child element of the Story node
-
-        //    var contactNode = new XElement("Contact");
-
-        //    contactNode.SetAttributeValue("Name", part.Contact.Name);
-        //    contactNode.SetAttributeValue("Email", part.Contact.Email);
-        //    contactNode.SetAttributeValue("JobTitle", part.Contact.JobTitle);
-        //    contactNode.SetAttributeValue("Phone", part.Contact.Phone);
-
-        //    context.Element(part.PartDefinition.Name).Add(contactNode);
-        //}
-
+        
         ///// <summary>
         ///// Define how StoryPart data is imported.
         ///// </summary>
