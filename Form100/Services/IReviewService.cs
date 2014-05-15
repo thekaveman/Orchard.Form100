@@ -1,9 +1,8 @@
-﻿using Orchard;
+﻿using CSM.Form100.Models;
+using Orchard;
 
 namespace CSM.Form100.Services
 {
-    using Models;
-
     public interface IReviewService : IDependency
     {
         ReviewDecisionRecord Get(int id);

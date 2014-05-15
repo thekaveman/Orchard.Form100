@@ -1,32 +1,31 @@
-﻿using Orchard.Data;
+﻿using CSM.Form100.Models;
+using Orchard.Data;
 
 namespace CSM.Form100.Services
 {
-    using Models;
-
     public class ReviewService : IReviewService
     {
-        private readonly IRepository<ReviewDecisionRecord> reviewApprovalRepository;
+        private readonly IRepository<ReviewDecisionRecord> reviewDecisionRepository;
 
-        public ReviewService(IRepository<ReviewDecisionRecord> reviewApprovalRepository)
+        public ReviewService(IRepository<ReviewDecisionRecord> reviewDecisionRepository)
         {
-            this.reviewApprovalRepository = reviewApprovalRepository;
+            this.reviewDecisionRepository = reviewDecisionRepository;
         }
 
         public ReviewDecisionRecord Get(int id)
         {
-            var approval = reviewApprovalRepository.Get(id);
+            var approval = reviewDecisionRepository.Get(id);
 
             return approval;
         }
 
         public ReviewDecisionRecord Create()
         {
-            var record = new ReviewDecisionRecord();
+            var reviewDecision = new ReviewDecisionRecord();
             
-            reviewApprovalRepository.Create(record);
+            reviewDecisionRepository.Create(reviewDecision);
 
-            return record;
+            return reviewDecision;
         }
     }
 }
