@@ -88,7 +88,7 @@
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
     <Compile Include="Models\ActionCategory.cs" />
-    <Compile Include="Models\RangeChecker.cs" />
+    <Compile Include="Models\RangeProvider.cs" />
     <Compile Include="Models\ReviewApprovalRecord.cs" />
     <Compile Include="Models\EmployeePart.cs" />
     <Compile Include="Models\EmployeePartRecord.cs" />
