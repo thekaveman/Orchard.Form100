@@ -14,7 +14,7 @@ namespace CSM.Form100.Handlers
     {
         private readonly char separator = ',';
 
-        public ReviewPartHandler(IRepository<ReviewPartRecord> repository, IReviewService reviewApprovalService)
+        public ReviewPartHandler(IRepository<ReviewPartRecord> repository, IReviewService reviewService)
         {
             Filters.Add(StorageFilter.For(repository));
 
@@ -25,11 +25,11 @@ namespace CSM.Form100.Handlers
 
                     if (!String.IsNullOrEmpty(reviewPart.Record.ApprovalChainIds))
                     {
-                        var approvals = reviewPart.Record.ApprovalChainIds
-                                                         .Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
-                                                         .Select(id => reviewApprovalService.Get(int.Parse(id)));
+                        var reviews = reviewPart.Record.ApprovalChainIds
+                                                       .Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
+                                                       .Select(id => reviewService.Get(int.Parse(id)));
 
-                        approvalChain = new Queue<ReviewDecisionRecord>();
+                        approvalChain = new Queue<ReviewDecisionRecord>(reviews);
                     }
 
                     return approvalChain;
