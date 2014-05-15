@@ -24,7 +24,7 @@ namespace CSM.Form100.Drivers
             return Combined(
                 ContentShape(
                     "Parts_Review_Approvals",
-                    () => shapeHelper.Parts_Review_Approvals(Approvals: part.Approvals)
+                    () => shapeHelper.Parts_Review_Approvals(Approvals: part.ApprovalChain)
                 ),
                 ContentShape(
                     "Parts_Review_Status",

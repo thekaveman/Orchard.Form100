@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement.Records;
+using System;
 
 namespace CSM.Form100.Models
 {
@@ -7,11 +8,6 @@ namespace CSM.Form100.Models
     {
         public virtual WorkflowStatus Status { get; set; }
 
-        public virtual IList<int> ApprovalIds { get; set; }
-
-        public ReviewPartRecord()
-        {
-            ApprovalIds = new List<int>();
-        }
+        public virtual string ApprovalChainIds { get; set; }
     }
 }
