@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Drivers\ActionPartDriver.cs" />
     <Compile Include="Drivers\EmployeePartDriver.cs" />
+    <Compile Include="Drivers\Extensions.cs" />
     <Compile Include="Drivers\ReviewPartDriver.cs" />
     <Compile Include="Handlers\ActionPartHandler.cs" />
     <Compile Include="Handlers\EmployeePartHandler.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Models\ReviewPart.cs" />
     <Compile Include="Models\ReviewPartRecord.cs" />
     <Compile Include="Models\WorkflowStatus.cs" />
+    <Compile Include="Services\IJobStepService.cs" />
     <Compile Include="Services\ReviewApprovalService.cs" />
     <Compile Include="Services\IReviewApprovalService.cs" />
   </ItemGroup>

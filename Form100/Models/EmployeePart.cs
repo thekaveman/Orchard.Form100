@@ -4,7 +4,7 @@ namespace CSM.Form100.Models
 {
     public class EmployeePart : ContentPart<EmployeePartRecord>
     {
-        public int? EmployeeId
+        public int EmployeeId
         {
             get { return Retrieve(e => e.EmployeeId); }
             set { Store(e => e.EmployeeId, value); }
