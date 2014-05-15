@@ -88,10 +88,11 @@
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
     <Compile Include="Models\ActionCategory.cs" />
+    <Compile Include="Models\RangeChecker.cs" />
     <Compile Include="Models\ReviewApprovalRecord.cs" />
     <Compile Include="Models\EmployeePart.cs" />
     <Compile Include="Models\EmployeePartRecord.cs" />
-    <Compile Include="Models\JobClassRecord.cs" />
+    <Compile Include="Models\JobStepRecord.cs" />
     <Compile Include="Models\ReviewPart.cs" />
     <Compile Include="Models\ReviewPartRecord.cs" />
     <Compile Include="Models\WorkflowStatus.cs" />

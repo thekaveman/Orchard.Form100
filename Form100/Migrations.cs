@@ -15,16 +15,16 @@ namespace CSM.Form100
             // (part record data is stored with the overall content record e.g. infoset/document storage)
 
 			SchemaBuilder.CreateTable(
-                typeof(JobClassRecord).Name,
+                typeof(JobStepRecord).Name,
                 table => table
 				    .Column<int>("Id", col => col.PrimaryKey().Identity())
-                    .Column<string>("Title", col => col.WithLength(1024))
-                    .Column<string>("DepartmentName", col => col.WithLength(1024))
-                    .Column<string>("DivisionName", col => col.WithLength(1024))
-                    .Column<string>("DivisionNumber", col => col.WithLength(1024))
-				    .Column<int>("Step", col => col.NotNull())
-                    .Column<decimal>("PayRate", col => col.NotNull())
+                    .Column<string>("Title", col => col.WithLength(RangeProvider.MaxStringLength))
+                    .Column<string>("DepartmentName", col => col.WithLength(RangeProvider.MaxStringLength))
+                    .Column<string>("DivisionName", col => col.WithLength(RangeProvider.MaxStringLength))
+                    .Column<int>("DivisionNumber", col => col.NotNull())
+                    .Column<int>("StepNumber", col => col.NotNull())
                     .Column<int>("HoursPerWeek", col => col.NotNull())
+                    .Column<decimal>("PayRate", col => col.NotNull())                    
 			);
 
 			SchemaBuilder.CreateTable(
@@ -33,7 +33,7 @@ namespace CSM.Form100
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
                     .Column<bool>("IsApproved", col => col.NotNull())
 				    .Column<DateTime>("DateOfApproval", col => col.Nullable())
-				    .Column<string>("Approver", col => col.Nullable())
+                    .Column<string>("ApproverName", col => col.WithLength(RangeProvider.MaxStringLength))
 			);
 
             // defining the content parts that make up a Form 100
