@@ -2,6 +2,8 @@
 using System.Xml.Linq;
 using CSM.Form100.Models;
 using CSM.Form100.Services;
+using CSM.Form100.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 
@@ -9,11 +11,11 @@ namespace CSM.Form100.Drivers
 {
     public class EmployeePartDriver : ContentPartDriver<EmployeePart>
     {
-        private readonly IJobStepService jobStepService;
-
-        public EmployeePartDriver(IJobStepService jobStepService)
+        private readonly IEmployeeService employeeService;
+        
+        public EmployeePartDriver(IEmployeeService employeeService)
         {
-            this.jobStepService = jobStepService;
+            this.employeeService = employeeService;
         }
 
         protected override string Prefix
@@ -48,6 +50,65 @@ namespace CSM.Form100.Drivers
         }
 
         /// <summary>
+        /// Respond to GET requests for an edit view of this part.
+        /// e.g. return a bunch of "edit" shapes
+        /// </summary>
+        protected override DriverResult Editor(EmployeePart part, dynamic shapeHelper)
+        {
+            var viewModel = employeeService.GetEmployeeViewModel(part);
+
+            return Combined(
+                ContentShape(
+                    "Parts_Employee_EmployeeId_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Employee_EmployeeId",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                ),
+                ContentShape(
+                    "Parts_Employee_Name_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Employee_Name",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                ),
+                ContentShape(
+                    "Parts_Employee_PriorJobStep_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Employee_PriorJobStep",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                ),
+                ContentShape(
+                    "Parts_Employee_CurrentJobStep_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Employee_CurrentJobStep",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                )
+            );
+        }
+
+        /// <summary>
+        /// Respond to POST requests for updating this part's data.
+        /// </summary>
+        protected override DriverResult Editor(EmployeePart part, IUpdateModel updater, dynamic shapeHelper)
+        {
+            var viewModel = new EmployeePartViewModel();
+
+            if (updater.TryUpdateModel(viewModel, Prefix, null, null))
+            {
+                employeeService.UpdateEmployee(viewModel, part);
+            }
+
+            return Editor(part, shapeHelper);
+        }
+
+        /// <summary>
         /// Define how the part's data is exported.
         /// Hint: it uses XML.
         /// </summary>
@@ -56,22 +117,18 @@ namespace CSM.Form100.Drivers
             var employeeNode = context.Element(part.PartDefinition.Name);
 
             employeeNode.SetAttributeValue("EmployeeId", part.EmployeeId);
-
             employeeNode.SetAttributeValue("FirstName", part.FirstName);
-
             employeeNode.SetAttributeValue("LastName", part.LastName);
 
             if (part.PriorJobStep != null)
             {
                 var jobStepNode = createJobStepNode("PriorJobStep", part.PriorJobStep);
-
                 employeeNode.Add(jobStepNode);
             }
 
             if (part.CurrentJobStep != null)
             {
                 var jobStepNode = createJobStepNode("CurrentJobStep", part.CurrentJobStep);
-
                 employeeNode.Add(jobStepNode);
             }
         }
@@ -95,18 +152,15 @@ namespace CSM.Form100.Drivers
             });
 
             context.ImportAttribute(employeeNode.Name.LocalName, "FirstName", n => part.FirstName = n);
-
             context.ImportAttribute(employeeNode.Name.LocalName, "LastName", n => part.LastName = n);
             
             var priorJobStepNode = employeeNode.Element("PriorJobStep");
-
             if (priorJobStepNode != null)
             {
                 part.PriorJobStep = parseJobStepNode(priorJobStepNode);
             }
 
             var currentJobStepNode = employeeNode.Element("CurrentJobStep");
-
             if (currentJobStepNode != null)
             {
                 part.CurrentJobStep = parseJobStepNode(currentJobStepNode);
@@ -118,19 +172,12 @@ namespace CSM.Form100.Drivers
             var jobStepNode = new XElement(name);
             
             jobStepNode.SetAttributeValue("Id", jobStep.Id);
-
             jobStepNode.SetAttributeValue("Title", jobStep.Title);
-
             jobStepNode.SetAttributeValue("DepartmentName", jobStep.DepartmentName);
-
             jobStepNode.SetAttributeValue("DivisionName", jobStep.DivisionName);
-
             jobStepNode.SetAttributeValue("DivisionNumber", jobStep.DivisionNumber);
-
             jobStepNode.SetAttributeValue("StepNumber", jobStep.StepNumber);
-
             jobStepNode.SetAttributeValue("HoursPerWeek", jobStep.HoursPerWeek);
-
             jobStepNode.SetAttributeValue("HourlyPay", jobStep.HourlyPay);
             
             return jobStepNode;
@@ -138,12 +185,10 @@ namespace CSM.Form100.Drivers
 
         private JobStepRecord parseJobStepNode(XElement jobStepNode)
         {
-            var jobStep = jobStepService.Create();
+            var jobStep = employeeService.CreateJobStep();
 
             jobStep.Title = jobStepNode.SafeGetAttribute("Title");
-
             jobStep.DepartmentName = jobStepNode.SafeGetAttribute("DepartmentName");
-
             jobStep.DivisionName = jobStepNode.SafeGetAttribute("DivisionName");
 
             int intVar;
