@@ -1,0 +1,15 @@
+﻿<Placement>
+
+  <!-- Editor shapes -->
+
+  <Place Parts_Action_EffectiveDate_Edit="Content:0.0"
+         Parts_Action_Category_Edit="Content:0.1"
+         Parts_Action_Type_Edit="Content:0.2"
+         Parts_Action_Detail_Edit="Content:0.3" />
+  
+         <!--Parts_Common_Body_Edit="Content:0.4"
+         Parts_Story_Legal_Edit="Content:0.5"
+         Parts_Story_Votes_Edit="Content:0.6"
+         /> -->
+    
+</Placement>

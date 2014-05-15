@@ -1,0 +1,6 @@
+﻿@model CSM.Form100.ViewModels.ActionPartViewModel
+
+<fieldset>
+    @Html.LabelFor(m => m.Detail, T("Action Details"));
+    @Html.TextBoxFor(m => m.Detail, new { @class = "text medium" });
+</fieldset>
