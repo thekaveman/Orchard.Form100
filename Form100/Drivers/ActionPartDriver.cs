@@ -1,10 +1,10 @@
-﻿using Orchard.ContentManagement.Drivers;
+﻿using System;
+using CSM.Form100.Models;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 
 namespace CSM.Form100.Drivers
 {
-    using Models;
-    using System;
     
     public class ActionPartDriver : ContentPartDriver<ActionPart>
     {
@@ -42,7 +42,7 @@ namespace CSM.Form100.Drivers
         }
 
         /// <summary>
-        /// Define how ActionPart data is exported.
+        /// Define how the part's data is exported.
         /// Hint: it uses XML.
         /// </summary>
         protected override void Exporting(ActionPart part, ExportContentContext context)
@@ -50,66 +50,45 @@ namespace CSM.Form100.Drivers
             var actionNode = context.Element(part.PartDefinition.Name);
 
             actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString(dateFormat) : String.Empty);
-            actionNode.SetAttributeValue("Category", part.Category == ActionCategory.Undefined ? String.Empty : part.Category.ToString());
+
+            actionNode.SetAttributeValue("Category", part.Category.ToString());
+
             actionNode.SetAttributeValue("Type", part.Type);
+
             actionNode.SetAttributeValue("Detail", part.Detail);
         }
-        
-        ///// <summary>
-        ///// Define how StoryPart data is imported.
-        ///// </summary>
-        //protected override void Importing(StoryPart part, ImportContentContext context)
-        //{
-        //    context.ImportAttribute(part.PartDefinition.Name, "Location", x => part.Location = x);
-        //    context.ImportAttribute(part.PartDefinition.Name, "Summary", x => part.Summary = x);
-        //    context.ImportAttribute(part.PartDefinition.Name, "LegalAnalysis", x => part.LegalAnalysis = x);
 
-        //    context.ImportAttribute(part.PartDefinition.Name, "Votes", x => {
-        //        int votes;
-        //        if (int.TryParse(x, out votes))
-        //            part.Votes = votes;
-        //        else
-        //            part.Votes = 0;
-        //    });
+        /// <summary>
+        /// Define how the part's data is imported.
+        /// Hint: it's the inverse of Exporting.
+        /// </summary>
+        protected override void Importing(ActionPart part, ImportContentContext context)
+        {
+            var actionNode = context.Data.Element(part.PartDefinition.Name);
 
-        //    // the object that will eventually be assigned to this part
-        //    ContactRecord contactRecord = null;
+            context.ImportAttribute(actionNode.Name.LocalName, "EffectiveDate", d =>
+            {
+                DateTime effectiveDate;
 
-        //    string name, email, jobTitle, phone;
-        //    name = email = jobTitle = phone = String.Empty;
+                if (DateTime.TryParse(d, out effectiveDate))
+                    part.EffectiveDate = effectiveDate;
+                else
+                    part.EffectiveDate = null;
+            });
 
-        //    // determine if this part was exported with a Contact element
-        //    var contactNode = context.Data.Element(part.PartDefinition.Name).Element("Contact");
-        //    if (contactNode != null)
-        //    {
-        //        // assign values for the known attributes
-        //        name = contactNode.Attribute("Name").SafeValue();
-        //        email = contactNode.Attribute("Email").SafeValue();
-        //        jobTitle = contactNode.Attribute("JobTitle").SafeValue();
-        //        phone = contactNode.Attribute("Phone").SafeValue();
+            context.ImportAttribute(actionNode.Name.LocalName, "Category", c =>
+            {
+                ActionCategory category;
 
-        //        // determine if this Contact element represents an existing contact record
-        //        if (!(String.IsNullOrEmpty(name) || String.IsNullOrEmpty(email)))
-        //        {
-        //            contactRecord = contactService.Get(name, email);
-        //        }
-        //    }
+                if (Enum.TryParse(c, out category))
+                    part.Category = category;
+                else
+                    part.Category = ActionCategory.Undefined;
+            });
 
-        //    // the export did not contain enough data to query existing contacts
-        //    if (contactRecord == null)
-        //    {
-        //        contactRecord = contactService.Create();
-        //    }
+            context.ImportAttribute(actionNode.Name.LocalName, "Type", t => part.Type = t);
 
-        //    contactRecord.Name = name;
-        //    contactRecord.Email = email;
-        //    contactRecord.JobTitle = jobTitle;
-        //    contactRecord.Phone = phone;
-
-        //    // make sure to update the contact record in DB
-        //    contactService.Update(contactRecord);
-
-        //    part.Contact = contactRecord;
-        //}
+            context.ImportAttribute(actionNode.Name.LocalName, "Detail", d => part.Detail = d);
+        }
     }
 }
