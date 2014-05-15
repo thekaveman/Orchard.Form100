@@ -14,14 +14,14 @@ namespace CSM.Form100.Handlers
     {
         private readonly char separator = ',';
 
-        public ReviewPartHandler(IRepository<ReviewPartRecord> repository, IReviewApprovalService reviewApprovalService)
+        public ReviewPartHandler(IRepository<ReviewPartRecord> repository, IReviewService reviewApprovalService)
         {
             Filters.Add(StorageFilter.For(repository));
 
             OnActivated<ReviewPart>((context, reviewPart) => {
 
                 reviewPart.ApprovalChainField.Loader(_ => {
-                    var approvalChain = new Queue<ReviewApprovalRecord>();
+                    var approvalChain = new Queue<ReviewDecisionRecord>();
 
                     if (!String.IsNullOrEmpty(reviewPart.Record.ApprovalChainIds))
                     {
@@ -29,7 +29,7 @@ namespace CSM.Form100.Handlers
                                                          .Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
                                                          .Select(id => reviewApprovalService.Get(int.Parse(id)));
 
-                        approvalChain = new Queue<ReviewApprovalRecord>();
+                        approvalChain = new Queue<ReviewDecisionRecord>();
                     }
 
                     return approvalChain;
@@ -40,7 +40,7 @@ namespace CSM.Form100.Handlers
 
                     if (approvalChain.Any())
                     {
-                        var copy = new Queue<ReviewApprovalRecord>(approvalChain);
+                        var copy = new Queue<ReviewDecisionRecord>(approvalChain);
 
                         while (copy.Any())
                         {
