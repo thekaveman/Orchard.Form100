@@ -16,13 +16,5 @@ namespace CSM.Form100.Models
         public virtual JobClassRecord PriorJobClass { get; set; }
 
         public virtual JobClassRecord CurrentJobClass { get; set; }
-
-        [StringLength(128)]
-        public virtual string DepartmentName { get; set; }
-
-        [StringLength(128)]
-        public virtual string DivisionName { get; set; }
-
-        public virtual string DivisionNumber { get; set; }
     }
 }

@@ -19,16 +19,19 @@ namespace CSM.Form100
                 table => table
 				    .Column<int>("Id", col => col.PrimaryKey().Identity())
                     .Column<string>("Title", col => col.WithLength(1024))
-				    .Column<int>("Step")
-				    .Column<decimal>("PayRate")
-				    .Column<int>("HoursPerWeek")
+                    .Column<string>("DepartmentName", col => col.WithLength(1024))
+                    .Column<string>("DivisionName", col => col.WithLength(1024))
+                    .Column<string>("DivisionNumber", col => col.WithLength(1024))
+				    .Column<int>("Step", col => col.NotNull())
+                    .Column<decimal>("PayRate", col => col.NotNull())
+                    .Column<int>("HoursPerWeek", col => col.NotNull())
 			);
 
 			SchemaBuilder.CreateTable(
                 typeof(ReviewApprovalRecord).Name,
                 table => table
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
-				    .Column<bool>("IsApproved")
+                    .Column<bool>("IsApproved", col => col.NotNull())
 				    .Column<DateTime>("DateOfApproval", col => col.Nullable())
 				    .Column<string>("Approver", col => col.Nullable())
 			);
@@ -62,6 +65,7 @@ namespace CSM.Form100
                         .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                         .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                     .WithPart("IdentityPart")
+                    .WithPart("TitlePart")
                     .WithPart(typeof(ActionPart).Name)
                     .WithPart(typeof(EmployeePart).Name)
                     .WithPart(typeof(ReviewPart).Name)

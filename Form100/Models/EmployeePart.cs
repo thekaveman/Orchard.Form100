@@ -33,23 +33,5 @@ namespace CSM.Form100.Models
             get { return Retrieve(e => e.CurrentJobClass); }
             set { Store(e => e.CurrentJobClass, value); }
         }
-
-        public string DepartmentName
-        {
-            get { return Retrieve(e => e.DepartmentName); }
-            set { Store(e => e.DepartmentName, value); }
-        }
-
-        public string DivisionName
-        {
-            get { return Retrieve(e => e.DivisionName); }
-            set { Store(e => e.DivisionName, value); }
-        }
-
-        public string DivisionNumber
-        {
-            get { return Retrieve(e => e.DivisionNumber); }
-            set { Store(e => e.DivisionNumber, value); }
-        }
     }
 }

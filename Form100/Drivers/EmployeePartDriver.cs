@@ -29,11 +29,7 @@ namespace CSM.Form100.Drivers
                 ContentShape(
                     "Parts_Employee_CurrentJobClass",
                     () => shapeHelper.Parts_Employee_CurrentJobClass(JobClass: part.CurrentJobClass)
-                ),
-                ContentShape(
-                    "Parts_Employee_Organization",
-                    () => shapeHelper.Parts_Employee_Organization(DepartmentName: part.DepartmentName, DivisionName: part.DivisionName, DivisionNumber: part.DivisionNumber)
-                )
+                )                
             );
         }
     }
