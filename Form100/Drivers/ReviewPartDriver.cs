@@ -15,9 +15,9 @@ namespace CSM.Form100.Drivers
 
         private readonly IReviewService reviewService;
 
-        public ReviewPartDriver(IReviewService reviewApprovalService)
+        public ReviewPartDriver(IReviewService reviewService)
         {
-            this.reviewService = reviewApprovalService;
+            this.reviewService = reviewService;
         }
 
         protected override string Prefix
@@ -33,8 +33,8 @@ namespace CSM.Form100.Drivers
         {
             return Combined(
                 ContentShape(
-                    "Parts_Review_Approvals",
-                    () => shapeHelper.Parts_Review_Approvals(Approvals: part.ApprovalChain)
+                    "Parts_Review_ApprovalChain",
+                    () => shapeHelper.Parts_Review_ApprovalChain(Approvals: part.ApprovalChain)
                 ),
                 ContentShape(
                     "Parts_Review_Status",
@@ -56,6 +56,7 @@ namespace CSM.Form100.Drivers
             if (part.ApprovalChain.Any())
             {
                 var copy = new Queue<ReviewDecisionRecord>(part.ApprovalChain);
+
                 var approvalChainNode = new XElement("ApprovalChain");
 
                 while (copy.Any())
