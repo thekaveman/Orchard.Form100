@@ -23,8 +23,8 @@ namespace CSM.Form100
                     .Column<string>("DivisionName", col => col.WithLength(RangeProvider.MaxStringLength))
                     .Column<int>("DivisionNumber", col => col.NotNull())
                     .Column<int>("StepNumber", col => col.NotNull())
+                    .Column<decimal>("HourlyPayRate", col => col.NotNull())
                     .Column<int>("HoursPerWeek", col => col.NotNull())
-                    .Column<decimal>("PayRate", col => col.NotNull())                    
 			);
 
 			SchemaBuilder.CreateTable(

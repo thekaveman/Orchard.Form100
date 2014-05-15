@@ -21,10 +21,10 @@ namespace CSM.Form100.Models
         [Range(RangeProvider.MinStepNumber, RangeProvider.MaxStepNumber)]
         public virtual int StepNumber { get; set; }
         
-        [Range(RangeProvider.MinHoursPerWeek, RangeProvider.MaxHoursPerWeek)]
-        public virtual int HoursPerWeek { get; set; }
-
         [Range(RangeProvider.MinHourlyPayRate, double.MaxValue)]
         public virtual decimal HourlyPayRate { get; set; }
+
+        [Range(RangeProvider.MinHoursPerWeek, RangeProvider.MaxHoursPerWeek)]
+        public virtual int HoursPerWeek { get; set; }
     }
 }
