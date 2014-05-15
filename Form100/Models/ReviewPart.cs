@@ -6,9 +6,9 @@ namespace CSM.Form100.Models
 {
     public class ReviewPart : ContentPart<ReviewPartRecord>
     {
-        internal readonly LazyField<Queue<ReviewApprovalRecord>> ApprovalChainField = new LazyField<Queue<ReviewApprovalRecord>>();
+        internal readonly LazyField<Queue<ReviewDecisionRecord>> ApprovalChainField = new LazyField<Queue<ReviewDecisionRecord>>();
         
-        public Queue<ReviewApprovalRecord> ApprovalChain
+        public Queue<ReviewDecisionRecord> ApprovalChain
         {
             get { return ApprovalChainField.Value; }
             set { ApprovalChainField.Value = value; }

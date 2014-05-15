@@ -7,10 +7,8 @@ namespace CSM.Form100.Models
     {
         public virtual int EmployeeId { get; set; }
 
-        [StringLengthMax]
         public virtual string FirstName { get; set; }
 
-        [StringLengthMax]
         public virtual string LastName { get; set; }
 
         public virtual JobStepRecord PriorJobStep { get; set; }

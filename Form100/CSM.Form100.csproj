@@ -89,8 +89,7 @@
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
     <Compile Include="Models\ActionCategory.cs" />
-    <Compile Include="Models\RangeProvider.cs" />
-    <Compile Include="Models\ReviewApprovalRecord.cs" />
+    <Compile Include="Models\ReviewDecisionRecord.cs" />
     <Compile Include="Models\EmployeePart.cs" />
     <Compile Include="Models\EmployeePartRecord.cs" />
     <Compile Include="Models\JobStepRecord.cs" />
@@ -98,8 +97,8 @@
     <Compile Include="Models\ReviewPartRecord.cs" />
     <Compile Include="Models\WorkflowStatus.cs" />
     <Compile Include="Services\IJobStepService.cs" />
-    <Compile Include="Services\ReviewApprovalService.cs" />
-    <Compile Include="Services\IReviewApprovalService.cs" />
+    <Compile Include="Services\ReviewService.cs" />
+    <Compile Include="Services\IReviewService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
