@@ -4,6 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using CSM.Form100.Models;
 using CSM.Form100.Services;
+using CSM.Form100.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 
@@ -41,6 +43,49 @@ namespace CSM.Form100.Drivers
                     () => shapeHelper.Parts_Review_Status(Status: part.Status)
                 )
             );
+        }
+
+        /// <summary>
+        /// Respond to GET requests for an edit view of this part.
+        /// e.g. return a bunch of "edit" shapes
+        /// </summary>
+        protected override DriverResult Editor(ReviewPart part, dynamic shapeHelper)
+        {
+            var viewModel = reviewService.GetReviewViewModel(part);
+
+            return Combined(
+                ContentShape(
+                    "Parts_Review_ApprovalChain_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Review_ApprovalChain",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                ),
+                ContentShape(
+                    "Parts_Review_Status_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Review_Status",
+                        Model: viewModel,
+                        Prefix: Prefix
+                    )
+                )
+            );
+        }
+
+        /// <summary>
+        /// Respond to POST requests for updating this part's data.
+        /// </summary>
+        protected override DriverResult Editor(ReviewPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
+            var viewModel = new ReviewPartViewModel();
+
+            if (updater.TryUpdateModel(viewModel, Prefix, null, null))
+            {
+                reviewService.UpdateReview(viewModel, part);
+            }
+
+            return Editor(part, shapeHelper);
         }
 
         /// <summary>
@@ -124,7 +169,7 @@ namespace CSM.Form100.Drivers
 
         private ReviewDecisionRecord parseReviewDecisionNode(XElement reviewDecisionNode)
         {
-            var reviewDecision = reviewService.Create();
+            var reviewDecision = reviewService.CreateReviewDecision();
 
             int id;
 

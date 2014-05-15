@@ -27,7 +27,7 @@ namespace CSM.Form100.Handlers
                     {
                         var reviews = reviewPart.Record.ApprovalChainIds
                                                        .Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
-                                                       .Select(id => reviewService.Get(int.Parse(id)));
+                                                       .Select(id => reviewService.GetReviewDecision(int.Parse(id)));
 
                         approvalChain = new Queue<ReviewDecisionRecord>(reviews);
                     }

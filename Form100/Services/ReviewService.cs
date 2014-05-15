@@ -1,4 +1,5 @@
 ﻿using CSM.Form100.Models;
+using CSM.Form100.ViewModels;
 using Orchard.Data;
 
 namespace CSM.Form100.Services
@@ -12,20 +13,30 @@ namespace CSM.Form100.Services
             this.reviewDecisionRepository = reviewDecisionRepository;
         }
 
-        public ReviewDecisionRecord Get(int id)
+        public ReviewDecisionRecord GetReviewDecision(int id)
         {
             var approval = reviewDecisionRepository.Get(id);
 
             return approval;
         }
 
-        public ReviewDecisionRecord Create()
+        public ReviewDecisionRecord CreateReviewDecision()
         {
             var reviewDecision = new ReviewDecisionRecord();
             
             reviewDecisionRepository.Create(reviewDecision);
 
             return reviewDecision;
+        }
+
+        public ReviewPartViewModel GetReviewViewModel(ReviewPart part)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void UpdateReview(ReviewPartViewModel viewModel, ReviewPart part)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
