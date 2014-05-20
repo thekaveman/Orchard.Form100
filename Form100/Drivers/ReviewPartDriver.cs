@@ -13,8 +13,6 @@ namespace CSM.Form100.Drivers
 {
     public class ReviewPartDriver : ContentPartDriver<ReviewPart>
     {
-        private readonly string dateFormat = "yyyy-dd-MM";
-
         private readonly IReviewService reviewService;
 
         public ReviewPartDriver(IReviewService reviewService)
@@ -33,15 +31,9 @@ namespace CSM.Form100.Drivers
         /// </summary>
         protected override DriverResult Display(ReviewPart part, string displayType, dynamic shapeHelper)
         {
-            return Combined(
-                ContentShape(
-                    "Parts_Review_ApprovalChain",
-                    () => shapeHelper.Parts_Review_ApprovalChain(Approvals: part.ApprovalChain)
-                ),
-                ContentShape(
-                    "Parts_Review_Status",
-                    () => shapeHelper.Parts_Review_Status(Status: part.Status)
-                )
+            return ContentShape(
+                "Parts_Review",
+                () => shapeHelper.Parts_Review(part)
             );
         }
 
@@ -53,22 +45,12 @@ namespace CSM.Form100.Drivers
         {
             var viewModel = reviewService.GetReviewViewModel(part);
 
-            return Combined(
-                ContentShape(
-                    "Parts_Review_ApprovalChain_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Review_ApprovalChain",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
-                ),
-                ContentShape(
-                    "Parts_Review_Status_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Review_Status",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
+            return ContentShape(
+                "Parts_Review_Edit",
+                () => shapeHelper.EditorTemplate(
+                    TemplateName: "Parts/Review",
+                    Model: viewModel,
+                    Prefix: Prefix
                 )
             );
         }
@@ -157,11 +139,8 @@ namespace CSM.Form100.Drivers
             var reviewDecisionNode = new XElement("ReviewDecision");
 
             reviewDecisionNode.SetAttributeValue("Id", reviewDecision.Id);
-
             reviewDecisionNode.SetAttributeValue("IsApproved", reviewDecision.IsApproved);
-
-            reviewDecisionNode.SetAttributeValue("ReviewDate", reviewDecision.ReviewDate.HasValue ? reviewDecision.ReviewDate.Value.ToString(dateFormat) : String.Empty);
-
+            reviewDecisionNode.SetAttributeValue("ReviewDate", reviewDecision.ReviewDate.HasValue ? reviewDecision.ReviewDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
             reviewDecisionNode.SetAttributeValue("ReviewerName", reviewDecision.ReviewerName);
 
             return reviewDecisionNode;

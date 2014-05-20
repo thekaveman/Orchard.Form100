@@ -1,0 +1,16 @@
+﻿@model CSM.Form100.ViewModels.EmployeePartViewModel
+
+<fieldset>
+    <legend>Employee Name</legend>
+
+    @Html.LabelFor(m => m.FirstName, T("First"))
+    @Html.TextBoxFor(m => m.FirstName, new { @class = "text medium" })
+
+    @Html.LabelFor(m => m.LastName, T("Last"))
+    @Html.TextBoxFor(m => m.LastName, new { @class = "text medium" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.EmployeeId, T("Employee ID"))
+    @Html.TextBoxFor(m => m.EmployeeId, new { @class = "text medium" })
+</fieldset>

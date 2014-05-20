@@ -10,8 +10,6 @@ namespace CSM.Form100.Drivers
     
     public class ActionPartDriver : ContentPartDriver<ActionPart>
     {
-        private readonly string dateFormat = "yyyy-dd-MM";
-
         private readonly IActionService actionService;
 
         public ActionPartDriver(IActionService actionService)
@@ -30,23 +28,9 @@ namespace CSM.Form100.Drivers
         /// </summary>
         protected override DriverResult Display(ActionPart part, string displayType, dynamic shapeHelper)
         {
-            return Combined(
-                ContentShape(
-                    "Parts_Action_EffectiveDate",
-                    () => shapeHelper.Parts_Action_EffectiveDate(EffectiveDate: part.EffectiveDate)
-                ),
-                ContentShape(
-                    "Parts_Action_Category",
-                    () => shapeHelper.Parts_Action_Category(Category: part.Category)
-                ),
-                ContentShape(
-                    "Parts_Action_Type",
-                    () => shapeHelper.Parts_Action_Type(Type: part.Type)
-                ),
-                ContentShape(
-                    "Parts_Action_Detail",
-                    () => shapeHelper.Parts_Action_Detail(Detail: part.Detail)
-                )
+            return ContentShape(
+                "Parts_Action",
+                () => shapeHelper.Parts_Action(part)
             );
         }
 
@@ -58,38 +42,12 @@ namespace CSM.Form100.Drivers
         {
             var viewModel = actionService.GetViewModel(part);
 
-            return Combined(
-                ContentShape(
-                    "Parts_Action_EffectiveDate_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Action_EffectiveDate",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
-                ),
-                ContentShape(
-                    "Parts_Action_Category_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Action_Category",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
-                ),
-                ContentShape(
-                    "Parts_Action_Type_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Action_Type",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
-                ),
-                ContentShape(
-                    "Parts_Action_Detail_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Action_Detail",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
+            return ContentShape(
+                "Parts_Action_Edit",
+                () => shapeHelper.EditorTemplate(
+                    TemplateName: "Parts/Action",
+                    Model: viewModel,
+                    Prefix: Prefix
                 )
             );
         }
@@ -101,7 +59,7 @@ namespace CSM.Form100.Drivers
         {
             var viewModel = new ActionPartViewModel();
 
-            if(updater.TryUpdateModel(viewModel, Prefix, null, null))
+            if(updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AllCategories" }))
             {
                 actionService.Update(viewModel, part);
             }
@@ -117,7 +75,7 @@ namespace CSM.Form100.Drivers
         {
             var actionNode = context.Element(part.PartDefinition.Name);
 
-            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString(dateFormat) : String.Empty);
+            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
 
             actionNode.SetAttributeValue("Category", part.Category.ToString());
 

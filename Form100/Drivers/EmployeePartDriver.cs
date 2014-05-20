@@ -29,24 +29,10 @@ namespace CSM.Form100.Drivers
         /// </summary>
         protected override DriverResult Display(EmployeePart part, string displayType, dynamic shapeHelper)
         {
-            return Combined(
-                ContentShape(
-                    "Parts_Employee_EmployeeId",
-                    () => shapeHelper.Parts_Employee_EmployeeId(EmployeeId: part.EmployeeId)
-                ),
-                ContentShape(
-                    "Parts_Employee_Name",
-                    () => shapeHelper.Parts_Employee_Name(FirstName: part.FirstName, LastName: part.LastName)
-                ),
-                ContentShape(
-                    "Parts_Employee_PriorJobStep",
-                    () => shapeHelper.Parts_Employee_PriorJobStep(JobStep: part.PriorJobStep)
-                ),
-                ContentShape(
-                    "Parts_Employee_CurrentJobStep",
-                    () => shapeHelper.Parts_Employee_CurrentJobStep(JobStep: part.CurrentJobStep)
-                )                
-            );
+            return ContentShape(
+                "Parts_Employee",
+                () => shapeHelper.Parts_Employee(part)
+            );  
         }
 
         /// <summary>
@@ -57,38 +43,12 @@ namespace CSM.Form100.Drivers
         {
             var viewModel = employeeService.GetEmployeeViewModel(part);
 
-            return Combined(
-                ContentShape(
-                    "Parts_Employee_EmployeeId_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Employee_EmployeeId",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
-                ),
-                ContentShape(
-                    "Parts_Employee_Name_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Employee_Name",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
-                ),
-                ContentShape(
-                    "Parts_Employee_PriorJobStep_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Employee_PriorJobStep",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
-                ),
-                ContentShape(
-                    "Parts_Employee_CurrentJobStep_Edit",
-                    () => shapeHelper.EditorTemplate(
-                        TemplateName: "Parts/Employee_CurrentJobStep",
-                        Model: viewModel,
-                        Prefix: Prefix
-                    )
+            return ContentShape(
+                "Parts_Employee_Edit",
+                () => shapeHelper.EditorTemplate(
+                    TemplateName: "Parts/Employee",
+                    Model: viewModel,
+                    Prefix: Prefix
                 )
             );
         }
