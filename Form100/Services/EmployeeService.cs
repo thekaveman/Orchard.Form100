@@ -14,33 +14,33 @@ namespace CSM.Form100.Services
             this.jobStepRepository = jobStepRepository;
         }
 
-        public EmployeePartViewModel GetEmployeeViewModel(EmployeePart source)
+        public EmployeePartViewModel GetEmployeeViewModel(EmployeePart part)
         {
-            var target = new EmployeePartViewModel();
+            var viewModel = new EmployeePartViewModel();
 
-            target.EmployeeId = source.EmployeeId > 0 ? source.EmployeeId.ToString() : String.Empty;
-            target.FirstName = source.FirstName;
-            target.LastName = source.LastName;
-            target.PriorJobStep = source.PriorJobStep;
-            target.CurrentJobStep = source.CurrentJobStep;
+            viewModel.EmployeeId = part.EmployeeId > 0 ? part.EmployeeId.ToString() : String.Empty;
+            viewModel.FirstName = part.FirstName;
+            viewModel.LastName = part.LastName;
+            viewModel.PriorJobStep = part.PriorJobStep;
+            viewModel.CurrentJobStep = part.CurrentJobStep;
 
-            return target;
+            return viewModel;
         }
 
-        public void UpdateEmployee(EmployeePartViewModel source, EmployeePart target)
+        public void UpdateEmployee(EmployeePartViewModel viewModel, EmployeePart part)
         {
             int employeeId;
 
-            if (int.TryParse(source.EmployeeId, out employeeId))
-                target.EmployeeId = employeeId;
+            if (int.TryParse(viewModel.EmployeeId, out employeeId))
+                part.EmployeeId = employeeId;
             else
                 throw new InvalidOperationException("Couldn't parse EmployeeId in editor template.");
 
-            target.FirstName = source.FirstName;
-            target.LastName = source.LastName;
+            part.FirstName = viewModel.FirstName;
+            part.LastName = viewModel.LastName;
 
-            target.PriorJobStep = UpdateJobStep(source.PriorJobStep);
-            target.CurrentJobStep = UpdateJobStep(source.CurrentJobStep);
+            part.PriorJobStep = UpdateJobStep(viewModel.PriorJobStep);
+            part.CurrentJobStep = UpdateJobStep(viewModel.CurrentJobStep);
         }
 
         public JobStepRecord GetJobStep(int id)
@@ -59,11 +59,11 @@ namespace CSM.Form100.Services
             return jobStep;
         }
 
-        public JobStepRecord UpdateJobStep(JobStepRecord source)
+        public JobStepRecord UpdateJobStep(JobStepRecord jobStep)
         {
-            jobStepRepository.Update(source);
+            jobStepRepository.Update(jobStep);
 
-            return source;
+            return jobStep;
         }
     }
 }
