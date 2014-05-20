@@ -6,7 +6,7 @@ namespace CSM.Form100.Models
     {
         public virtual int Id { get; set; }
 
-        public virtual bool IsApproved { get; set; }
+        public virtual bool? IsApproved { get; set; }
 
         public virtual DateTime? ReviewDate { get; set; }
 

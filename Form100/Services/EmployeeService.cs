@@ -1,4 +1,5 @@
-﻿using CSM.Form100.Models;
+﻿using System;
+using CSM.Form100.Models;
 using CSM.Form100.ViewModels;
 using Orchard.Data;
 
@@ -17,7 +18,7 @@ namespace CSM.Form100.Services
         {
             var target = new EmployeePartViewModel();
 
-            target.EmployeeId = source.EmployeeId;
+            target.EmployeeId = source.EmployeeId > 0 ? source.EmployeeId.ToString() : String.Empty;
             target.FirstName = source.FirstName;
             target.LastName = source.LastName;
             target.PriorJobStep = source.PriorJobStep;
@@ -28,7 +29,13 @@ namespace CSM.Form100.Services
 
         public void UpdateEmployee(EmployeePartViewModel source, EmployeePart target)
         {
-            target.EmployeeId = source.EmployeeId;
+            int employeeId;
+
+            if (int.TryParse(source.EmployeeId, out employeeId))
+                target.EmployeeId = employeeId;
+            else
+                throw new InvalidOperationException("Couldn't parse EmployeeId in editor template.");
+
             target.FirstName = source.FirstName;
             target.LastName = source.LastName;
 

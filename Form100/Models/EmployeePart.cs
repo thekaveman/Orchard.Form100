@@ -6,32 +6,32 @@ namespace CSM.Form100.Models
     {
         public int EmployeeId
         {
-            get { return Retrieve(e => e.EmployeeId); }
-            set { Store(e => e.EmployeeId, value); }
+            get { return Record.EmployeeId; }
+            set { Record.EmployeeId = value; }
         }
 
         public string FirstName
         {
-            get { return Retrieve(e => e.FirstName); }
-            set { Store(e => e.FirstName, value); }
+            get { return Record.FirstName; }
+            set { Record.FirstName = value; }
         }
 
         public string LastName
         {
-            get { return Retrieve(e => e.LastName); }
-            set { Store(e => e.LastName, value); }
-        }
-
-        public JobStepRecord PriorJobStep
-        {
-            get { return Retrieve(e => e.PriorJobStep); }
-            set { Store(e => e.PriorJobStep, value); }
+            get { return Record.LastName; }
+            set { Record.LastName = value; }
         }
 
         public JobStepRecord CurrentJobStep
         {
-            get { return Retrieve(e => e.CurrentJobStep); }
-            set { Store(e => e.CurrentJobStep, value); }
+            get { return Record.CurrentJobStep; }
+            set { Record.CurrentJobStep = value; }
+        }
+
+        public JobStepRecord PriorJobStep
+        {
+            get { return Record.PriorJobStep; }
+            set { Record.PriorJobStep = value; }
         }
     }
 }

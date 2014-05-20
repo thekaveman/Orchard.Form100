@@ -6,7 +6,7 @@ namespace CSM.Form100.ViewModels
     public class EmployeePartViewModel
     {
         [Required, Display(Name = "Employee ID")]
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         [Required, Display(Name = "First Name")]
         public string FirstName { get; set; }
@@ -15,9 +15,8 @@ namespace CSM.Form100.ViewModels
         public string LastName { get; set; }
 
         [Required]
-        public JobStepRecord PriorJobStep { get; set; }
-
-        [Required]
         public JobStepRecord CurrentJobStep { get; set; }
+
+        public JobStepRecord PriorJobStep { get; set; }
     }
 }

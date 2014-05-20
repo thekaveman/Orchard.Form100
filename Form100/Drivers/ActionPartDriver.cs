@@ -75,12 +75,9 @@ namespace CSM.Form100.Drivers
         {
             var actionNode = context.Element(part.PartDefinition.Name);
 
-            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
-
+            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.ToString(FormatProvider.DateFormat));
             actionNode.SetAttributeValue("Category", part.Category.ToString());
-
             actionNode.SetAttributeValue("Type", part.Type);
-
             actionNode.SetAttributeValue("Detail", part.Detail);
         }
 
@@ -99,7 +96,7 @@ namespace CSM.Form100.Drivers
                 if (DateTime.TryParse(d, out effectiveDate))
                     part.EffectiveDate = effectiveDate;
                 else
-                    part.EffectiveDate = null;
+                    throw new InvalidOperationException("Couldn't parse EffectiveDate attribute to DateTime.");
             });
 
             context.ImportAttribute(actionNode.Name.LocalName, "Category", c =>

@@ -11,16 +11,46 @@ namespace CSM.Form100
     {
         public int Create()
         {
-			// creating tables for non-part record classes
-            // (part record data is stored with the overall content record e.g. infoset/document storage)
+            // creating tables for part record classes
 
+            SchemaBuilder.CreateTable(
+                typeof(ActionPartRecord).Name,
+                table => table
+                    .ContentPartRecord()
+                    .Column<DateTime>("EffectiveDate", col => col.NotNull())
+                    .Column<ActionCategory>("ActionCategory", col => col.NotNull())
+                    .Column<string>("Type", col => col.NotNull())
+                    .Column<int>("Detail")
+            );
+
+            SchemaBuilder.CreateTable(
+                typeof(EmployeePartRecord).Name,
+                table => table
+                    .ContentPartRecord()
+                    .Column<int>("EmployeeId", col => col.NotNull())
+                    .Column<string>("FirstName", col => col.NotNull())
+                    .Column<string>("LastName", col => col.NotNull())
+                    .Column<int>("CurrentJobStep_Id", col => col.NotNull())
+                    .Column<int>("PriorJobStep_Id")                    
+            );
+
+            SchemaBuilder.CreateTable(
+                typeof(ReviewPartRecord).Name,
+                table => table
+                    .ContentPartRecord()
+                    .Column<WorkflowStatus>("Status", col => col.NotNull())
+                    .Column<string>("ApprovalChainIds")
+            );
+
+			// creating tables for non-part record classes
+            
 			SchemaBuilder.CreateTable(
                 typeof(JobStepRecord).Name,
                 table => table
 				    .Column<int>("Id", col => col.PrimaryKey().Identity())
-                    .Column<string>("Title")
-                    .Column<string>("DepartmentName")
-                    .Column<string>("DivisionName")
+                    .Column<string>("Title", col => col.NotNull())
+                    .Column<string>("DepartmentName", col => col.NotNull())
+                    .Column<string>("DivisionName", col => col.NotNull())
                     .Column<int>("DivisionNumber", col => col.NotNull())
                     .Column<int>("StepNumber", col => col.NotNull())
                     .Column<int>("HoursPerWeek", col => col.NotNull())
@@ -31,9 +61,9 @@ namespace CSM.Form100
                 typeof(ReviewDecisionRecord).Name,
                 table => table
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
-                    .Column<bool>("IsApproved", col => col.NotNull())
+                    .Column<bool>("IsApproved", col => col.Nullable())
                     .Column<DateTime>("ReviewDate", col => col.Nullable())
-                    .Column<string>("ReviewerName")
+                    .Column<string>("ReviewerName", col => col.NotNull())
 			);
 
             // defining the content parts that make up a Form 100

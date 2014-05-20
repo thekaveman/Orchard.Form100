@@ -11,8 +11,8 @@ namespace CSM.Form100.Models
 
         public virtual string LastName { get; set; }
 
-        public virtual JobStepRecord PriorJobStep { get; set; }
-
         public virtual JobStepRecord CurrentJobStep { get; set; }
+
+        public virtual JobStepRecord PriorJobStep { get; set; }
     }
 }
