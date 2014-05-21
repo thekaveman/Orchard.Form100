@@ -2,6 +2,7 @@
 using CSM.Form100.Models;
 using CSM.Form100.Services;
 using CSM.Form100.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 
@@ -19,7 +20,7 @@ namespace CSM.Form100.Drivers
 
         protected override string Prefix
         {
-            get { return "Action"; }
+            get { return "ActionPart"; }
         }
 
         /// <summary>
@@ -55,11 +56,11 @@ namespace CSM.Form100.Drivers
         /// <summary>
         /// Respond to POST requests for updating this part's data.
         /// </summary>
-        protected override DriverResult Editor(ActionPart part, Orchard.ContentManagement.IUpdateModel updater, dynamic shapeHelper)
+        protected override DriverResult Editor(ActionPart part, IUpdateModel updater, dynamic shapeHelper)
         {
             var viewModel = new ActionPartViewModel();
 
-            if(updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AllCategories" }))
+            if (updater.TryUpdateModel(viewModel, Prefix, null, null))
             {
                 actionService.Update(viewModel, part);
             }
@@ -75,7 +76,7 @@ namespace CSM.Form100.Drivers
         {
             var actionNode = context.Element(part.PartDefinition.Name);
 
-            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.ToString(FormatProvider.DateFormat));
+            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
             actionNode.SetAttributeValue("Category", part.Category.ToString());
             actionNode.SetAttributeValue("Type", part.Type);
             actionNode.SetAttributeValue("Detail", part.Detail);
@@ -96,7 +97,7 @@ namespace CSM.Form100.Drivers
                 if (DateTime.TryParse(d, out effectiveDate))
                     part.EffectiveDate = effectiveDate;
                 else
-                    throw new InvalidOperationException("Couldn't parse EffectiveDate attribute to DateTime.");
+                    part.EffectiveDate = null;
             });
 
             context.ImportAttribute(actionNode.Name.LocalName, "Category", c =>

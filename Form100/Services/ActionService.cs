@@ -19,7 +19,7 @@ namespace CSM.Form100.Services
         {
             var target = new ActionPartViewModel();
 
-            target.EffectiveDate = part.EffectiveDate.Equals(DateTime.MinValue) ? String.Empty : part.EffectiveDate.ToString(FormatProvider.DateFormat);
+            target.EffectiveDate = part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString(FormatProvider.DateFormat) : String.Empty;
             target.Category = part.Category;
             target.Type = part.Type;
             target.Detail = part.Detail;
@@ -34,7 +34,7 @@ namespace CSM.Form100.Services
             if (DateTime.TryParse(viewModel.EffectiveDate, out effectiveDate))
                 part.EffectiveDate = effectiveDate;
             else
-                throw new InvalidOperationException("Couldn't parse EffectiveDate in editor template.");
+                part.EffectiveDate = null;
 
             part.Category = viewModel.Category;
             part.Type = viewModel.Type;

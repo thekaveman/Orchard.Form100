@@ -5,7 +5,7 @@ namespace CSM.Form100.Models
 {
     public class ActionPart : ContentPart<ActionPartRecord>
     {
-        public DateTime EffectiveDate
+        public DateTime? EffectiveDate
         {
             get { return Record.EffectiveDate; }
             set { Record.EffectiveDate = value; }

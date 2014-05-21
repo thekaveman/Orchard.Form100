@@ -6,12 +6,17 @@ namespace CSM.Form100.Models
 {
     public class ActionPartRecord : ContentPartRecord
     {
-        public virtual DateTime EffectiveDate { get; set; }
+        public virtual DateTime? EffectiveDate { get; set; }
 
         public virtual ActionCategory Category { get; set; }
 
         public virtual string Type { get; set; }
 
         public virtual string Detail { get; set; }
+
+        public ActionPartRecord()
+        {
+            EffectiveDate = null;
+        }
     }
 }

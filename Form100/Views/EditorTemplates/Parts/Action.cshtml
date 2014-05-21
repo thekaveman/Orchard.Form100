@@ -3,21 +3,23 @@
 <h2>Personnel Action</h2>
 
 <fieldset>
-    @Html.LabelFor(m => m.Type, T("Category"))
+    @Html.LabelFor(m => m.Category, T("Category"))
     @Html.EnumDropDownListFor(m => m.Category)
-</fieldset>
-
-<fieldset>
-    @Html.LabelFor(m => m.Type, T("Type of Action"))
-    @Html.TextBoxFor(m => m.Type, new { @class = "text medium" })
-</fieldset>
-
-<fieldset>
-    @Html.LabelFor(m => m.Detail, T("Action Details"))
-    @Html.TextBoxFor(m => m.Detail, new { @class = "text medium" })
 </fieldset>
 
 <fieldset>
     @Html.LabelFor(m => m.EffectiveDate, T("Effective Date"))
     @Html.TextBoxFor(m => m.EffectiveDate, new { @class = "text medium" })
+    <span class="hint">Effective Date is required.</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Type, T("Type of Action"))
+    @Html.TextBoxFor(m => m.Type, new { @class = "text medium" })
+    <span class="hint">Type of Action is required.</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Detail, T("Action Details"))
+    @Html.TextBoxFor(m => m.Detail, new { @class = "text medium" })
 </fieldset>
