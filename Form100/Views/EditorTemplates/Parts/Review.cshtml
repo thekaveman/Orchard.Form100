@@ -1,6 +1,14 @@
 ﻿@model CSM.Form100.ViewModels.ReviewPartViewModel
 
+@{ 
+    Script.Require("jQuery");
+}
+
 <fieldset>
     @Html.LabelFor(m => m.Status, T("Status"))
-    @Html.TextBoxFor(m => m.Status, new { @class = "text medium" })
+    @Html.TextBoxFor(m => m.Status, new { disabled = "true" })
+</fieldset>
+
+<fieldset>
+    
 </fieldset>
