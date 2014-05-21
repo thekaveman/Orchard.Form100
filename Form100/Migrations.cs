@@ -1,12 +1,11 @@
 using System;
+using CSM.Form100.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace CSM.Form100
 {
-    using Models;
-
     public class Migrations : DataMigrationImpl
     {
         public int Create()
@@ -20,7 +19,7 @@ namespace CSM.Form100
                     .Column<DateTime>("EffectiveDate", col => col.NotNull())
                     .Column<ActionCategory>("ActionCategory", col => col.NotNull())
                     .Column<string>("Type", col => col.NotNull())
-                    .Column<int>("Detail")
+                    .Column<string>("Detail")
             );
 
             SchemaBuilder.CreateTable(
@@ -39,7 +38,7 @@ namespace CSM.Form100
                 table => table
                     .ContentPartRecord()
                     .Column<WorkflowStatus>("Status", col => col.NotNull())
-                    .Column<string>("ApprovalChainIds")
+                    .Column<string>("ApprovalChainIds", col => col.Unlimited())
             );
 
 			// creating tables for non-part record classes
@@ -54,7 +53,7 @@ namespace CSM.Form100
                     .Column<int>("DivisionNumber", col => col.NotNull())
                     .Column<int>("StepNumber", col => col.NotNull())
                     .Column<int>("HoursPerWeek", col => col.NotNull())
-                    .Column<decimal>("HourlyPay", col => col.NotNull())                    
+                    .Column<decimal>("HourlyRate", col => col.NotNull().WithPrecision((byte)10).WithScale((byte)2))
 			);
 
 			SchemaBuilder.CreateTable(
