@@ -20,7 +20,7 @@ namespace CSM.Form100.Drivers
 
         protected override string Prefix
         {
-            get { return "ActionPart"; }
+            get { return "CSM_Form100_ActionPart"; }
         }
 
         /// <summary>
