@@ -126,7 +126,7 @@
     <Content Include="Views\EditorTemplates\Parts\Review.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\_JobStep.cshtml" />
+    <Content Include="Views\EditorTemplates\JobStepRecordViewModel.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

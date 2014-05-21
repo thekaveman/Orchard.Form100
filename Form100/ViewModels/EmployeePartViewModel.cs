@@ -18,9 +18,13 @@ namespace CSM.Form100.ViewModels
          Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Required]
+        [Required,
+         Display(Name = "Job Class as of Effective Date")]
         public JobStepRecordViewModel CurrentJobStep { get; set; }
 
+        public bool NeedsPriorJobStepEditor { get; set; }
+
+        [Display(Name = "Job Class prior to Effective Date")]
         public JobStepRecordViewModel PriorJobStep { get; set; }
     }
 }

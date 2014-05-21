@@ -20,7 +20,7 @@ namespace CSM.Form100.Drivers
 
         protected override string Prefix
         {
-            get { return "Employee"; }
+            get { return "CSM_Form100_EmployeePart"; }
         }
 
         /// <summary>
@@ -58,11 +58,11 @@ namespace CSM.Form100.Drivers
         /// </summary>
         protected override DriverResult Editor(EmployeePart part, IUpdateModel updater, dynamic shapeHelper)
         {
-            var viewModel = new EmployeePartViewModel();
-
-            if (updater.TryUpdateModel(viewModel, Prefix, null, null))
+            var employeeViewModel = new EmployeePartViewModel();
+            
+            if (updater.TryUpdateModel(employeeViewModel, Prefix, null, null))
             {
-                employeeService.UpdateEmployee(viewModel, part);
+                employeeService.UpdateEmployee(employeeViewModel, part);
             }
 
             return Editor(part, shapeHelper);
@@ -113,17 +113,27 @@ namespace CSM.Form100.Drivers
 
             context.ImportAttribute(employeeNode.Name.LocalName, "FirstName", n => part.FirstName = n);
             context.ImportAttribute(employeeNode.Name.LocalName, "LastName", n => part.LastName = n);
-            
-            var priorJobStepNode = employeeNode.Element("PriorJobStep");
-            if (priorJobStepNode != null)
-            {
-                part.PriorJobStep = parseJobStepNode(priorJobStepNode);
-            }
 
             var currentJobStepNode = employeeNode.Element("CurrentJobStep");
             if (currentJobStepNode != null)
             {
-                part.CurrentJobStep = parseJobStepNode(currentJobStepNode);
+                var jobStep = parseJobStepNode(currentJobStepNode);
+
+                if (jobStep.Id > 0)
+                    part.CurrentJobStep = employeeService.UpdateJobStep(jobStep);
+                else
+                    part.CurrentJobStep = employeeService.CreateJobStep(jobStep);
+            }
+
+            var priorJobStepNode = employeeNode.Element("PriorJobStep");
+            if (priorJobStepNode != null)
+            {
+                var jobStep = parseJobStepNode(priorJobStepNode);
+
+                if (jobStep.Id > 0)
+                    part.PriorJobStep = employeeService.UpdateJobStep(jobStep);
+                else
+                    part.PriorJobStep = employeeService.CreateJobStep(jobStep);
             }
         }
 
@@ -138,54 +148,43 @@ namespace CSM.Form100.Drivers
             jobStepNode.SetAttributeValue("DivisionNumber", jobStep.DivisionNumber);
             jobStepNode.SetAttributeValue("StepNumber", jobStep.StepNumber);
             jobStepNode.SetAttributeValue("HoursPerWeek", jobStep.HoursPerWeek);
-            jobStepNode.SetAttributeValue("HourlyPay", jobStep.HourlyRate);
+            jobStepNode.SetAttributeValue("HourlyRate", jobStep.HourlyRate);
             
             return jobStepNode;
         }
 
         private JobStepRecord parseJobStepNode(XElement jobStepNode)
         {
-            var jobStep = employeeService.CreateJobStep();
+            JobStepRecord jobStep;
+            int intVar;
+
+            if (int.TryParse(jobStepNode.SafeGetAttribute("Id"), out intVar))
+                jobStep = employeeService.GetJobStep(intVar) ?? new JobStepRecord();
+            else
+                jobStep = new JobStepRecord();
 
             jobStep.Title = jobStepNode.SafeGetAttribute("Title");
             jobStep.DepartmentName = jobStepNode.SafeGetAttribute("DepartmentName");
             jobStep.DivisionName = jobStepNode.SafeGetAttribute("DivisionName");
 
-            int intVar;
-
-            string stringVar = jobStepNode.SafeGetAttribute("Id");
-
-            if (int.TryParse(stringVar, out intVar))
-                jobStep.Id = intVar;
-            else
-                throw new InvalidOperationException(String.Format("Couldn't parse {0} node Id attribute to int.", jobStepNode.Name.LocalName));
-
-            stringVar = jobStepNode.SafeGetAttribute("DivisionNumber");
-            
-            if (int.TryParse(stringVar, out intVar))
+            if (int.TryParse(jobStepNode.SafeGetAttribute("DivisionNumber"), out intVar))
                 jobStep.DivisionNumber = intVar;
             else
                 throw new InvalidOperationException(String.Format("Couldn't parse {0} node DivisionNumber attribute to int.", jobStepNode.Name.LocalName));
 
-            stringVar = jobStepNode.SafeGetAttribute("StepNumber");
-
-            if (int.TryParse(stringVar, out intVar))
+            if (int.TryParse(jobStepNode.SafeGetAttribute("StepNumber"), out intVar))
                 jobStep.StepNumber = intVar;
             else
                 throw new InvalidOperationException(String.Format("Couldn't parse {0} node StepNumber attribute to int.", jobStepNode.Name.LocalName));
 
-            stringVar = jobStepNode.SafeGetAttribute("HoursPerWeek");
-
-            if(int.TryParse(stringVar, out intVar))
+            if(int.TryParse(jobStepNode.SafeGetAttribute("HoursPerWeek"), out intVar))
                 jobStep.HoursPerWeek = intVar;
             else
                 throw new InvalidOperationException(String.Format("Couldn't parse {0} node HoursPerWeek attribute to int.", jobStepNode.Name.LocalName));
 
             decimal decimalVar;
 
-            stringVar = jobStepNode.SafeGetAttribute("HourlyPay");
-
-            if (decimal.TryParse(stringVar, out decimalVar))
+            if (decimal.TryParse(jobStepNode.SafeGetAttribute("HourlyRate"), out decimalVar))
                 jobStep.HourlyRate = decimalVar;
             else
                 throw new InvalidOperationException(String.Format("Couldn't parse {0} node HourlyPay attribute to decimal.", jobStepNode.Name.LocalName));

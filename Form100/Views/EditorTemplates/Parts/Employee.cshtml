@@ -17,6 +17,9 @@
     @Html.TextBoxFor(m => m.EmployeeId, new { @class = "text medium" })
 </fieldset>
 
-@Html.Partial("EditorTemplates/_JobStep", Model.CurrentJobStep)
+@Html.EditorFor(m => m.CurrentJobStep)
 
-@Html.Partial("EditorTemplates/_JobStep", Model.PriorJobStep)
+@if (Model.NeedsPriorJobStepEditor)
+{
+    @Html.EditorFor(m => m.PriorJobStep)
+}

@@ -12,12 +12,12 @@ namespace CSM.Form100.Services
 
         JobStepRecord GetJobStep(int id);
 
-        JobStepRecord CreateJobStep();
-
-        JobStepRecord UpdateJobStep(JobStepRecord jobStep);
-
         JobStepRecordViewModel GetJobStepViewModel(JobStepRecord jobStep, string qualifier);
 
+        JobStepRecord CreateJobStep(JobStepRecord jobStep);
+        
         JobStepRecord UpdateJobStep(JobStepRecordViewModel viewModel);
+
+        JobStepRecord UpdateJobStep(JobStepRecord jobStep);
     }
 }

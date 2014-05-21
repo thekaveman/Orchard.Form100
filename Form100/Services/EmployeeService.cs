@@ -23,15 +23,18 @@ namespace CSM.Form100.Services
             viewModel.FirstName = part.FirstName;
             viewModel.LastName = part.LastName;
 
+            bool needsPriorJobStepEditor = true;
             string effectiveDate = "Effective Date";
             ActionPart actionPart = part.As<ActionPart>();
 
-            if (actionPart != null && actionPart.EffectiveDate != DateTime.MinValue)
+            if (actionPart != null && actionPart.EffectiveDate.HasValue)
             {
-                effectiveDate = actionPart.EffectiveDate.ToString(FormatProvider.DateFormat);
+                effectiveDate = actionPart.EffectiveDate.Value.ToString(FormatProvider.DateFormat);
+                needsPriorJobStepEditor = actionPart.Category == ActionCategory.Change;
             }
 
             viewModel.CurrentJobStep = GetJobStepViewModel(part.CurrentJobStep, String.Format("as of {0}", effectiveDate));
+            viewModel.NeedsPriorJobStepEditor = needsPriorJobStepEditor;
             viewModel.PriorJobStep = GetJobStepViewModel(part.PriorJobStep, String.Format("prior to {0}", effectiveDate));
 
             return viewModel;
@@ -62,18 +65,9 @@ namespace CSM.Form100.Services
             return jobStep;
         }
 
-        public JobStepRecord CreateJobStep()
+        public JobStepRecord CreateJobStep(JobStepRecord jobStep)
         {
-            var jobStep = new JobStepRecord();
-
             jobStepRepository.Create(jobStep);
-
-            return jobStep;
-        }
-
-        public JobStepRecord UpdateJobStep(JobStepRecord jobStep)
-        {
-            jobStepRepository.Update(jobStep);
 
             return jobStep;
         }
@@ -97,9 +91,16 @@ namespace CSM.Form100.Services
             return viewModel;
         }
 
+        public JobStepRecord UpdateJobStep(JobStepRecord jobStep)
+        {
+            jobStepRepository.Update(jobStep);
+
+            return jobStep;
+        }
+
         public JobStepRecord UpdateJobStep(JobStepRecordViewModel viewModel)
         {
-            var jobStep = GetJobStep(viewModel.Id) ?? CreateJobStep();
+            var jobStep = GetJobStep(viewModel.Id) ?? new JobStepRecord();
 
             jobStep.Title = viewModel.Title;
             jobStep.DepartmentName = viewModel.DepartmentName;
@@ -129,7 +130,10 @@ namespace CSM.Form100.Services
             else
                 throw new InvalidOperationException("Couldn't parse JobStep HourlyRate to decimal from editor template.");
 
-            return UpdateJobStep(jobStep);
+            if (jobStep.Id > 0)
+                return UpdateJobStep(jobStep);
+            else
+                return CreateJobStep(jobStep);
         }
     }
 }

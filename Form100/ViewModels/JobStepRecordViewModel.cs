@@ -7,9 +7,7 @@ namespace CSM.Form100.ViewModels
         public int Id { get; set; }
 
         public string Qualifier { get; set; }
-
-        public string EffectiveDate { get; set; }
-
+        
         [Required]
         public string Title { get; set; }
 
