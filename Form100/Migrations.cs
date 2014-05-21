@@ -17,7 +17,7 @@ namespace CSM.Form100
                 table => table
                     .ContentPartRecord()
                     .Column<DateTime>("EffectiveDate", col => col.NotNull())
-                    .Column<ActionCategory>("ActionCategory", col => col.NotNull())
+                    .Column<ActionCategory>("Category", col => col.NotNull())
                     .Column<string>("Type", col => col.NotNull())
                     .Column<string>("Detail")
             );
@@ -29,16 +29,16 @@ namespace CSM.Form100
                     .Column<int>("EmployeeId", col => col.NotNull())
                     .Column<string>("FirstName", col => col.NotNull())
                     .Column<string>("LastName", col => col.NotNull())
-                    .Column<int>("CurrentJobStep_Id", col => col.NotNull())
-                    .Column<int>("PriorJobStep_Id")                    
+                    .Column<int>("CurrentJobStep_Id", col => col.Nullable())
+                    .Column<int>("PriorJobStep_Id", col => col.Nullable())                    
             );
 
             SchemaBuilder.CreateTable(
                 typeof(ReviewPartRecord).Name,
                 table => table
                     .ContentPartRecord()
-                    .Column<WorkflowStatus>("Status", col => col.NotNull())
                     .Column<string>("ApprovalChainIds", col => col.Unlimited())
+                    .Column<WorkflowStatus>("Status", col => col.NotNull())
             );
 
 			// creating tables for non-part record classes
