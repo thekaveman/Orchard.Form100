@@ -1,8 +1,10 @@
 ﻿@model CSM.Form100.ViewModels.ActionPartViewModel
 
+<h2>Personnel Action</h2>
+
 <fieldset>
-    @Html.LabelFor(m => m.EffectiveDate, T("Effective Date"))
-    @Html.TextBoxFor(m => m.EffectiveDate, new { @class = "text medium" })
+    @Html.LabelFor(m => m.Type, T("Category"))
+    @Html.EnumDropDownListFor(m => m.Category)
 </fieldset>
 
 <fieldset>
@@ -11,11 +13,11 @@
 </fieldset>
 
 <fieldset>
-    @Html.LabelFor(m => m.Category, T("Category"))
-    @Html.TextBoxFor(m => m.Category, new { @class = "text medium" })
+    @Html.LabelFor(m => m.Detail, T("Action Details"))
+    @Html.TextBoxFor(m => m.Detail, new { @class = "text medium" })
 </fieldset>
 
 <fieldset>
-    @Html.LabelFor(m => m.Detail, T("Action Details"))
-    @Html.TextBoxFor(m => m.Detail, new { @class = "text medium" })
+    @Html.LabelFor(m => m.EffectiveDate, T("Effective Date"))
+    @Html.TextBoxFor(m => m.EffectiveDate, new { @class = "text medium" })
 </fieldset>

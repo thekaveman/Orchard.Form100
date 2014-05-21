@@ -19,12 +19,10 @@ namespace CSM.Form100.Services
         {
             var target = new ActionPartViewModel();
 
-            target.EffectiveDate = part.EffectiveDate.ToString(FormatProvider.DateFormat);
-            target.Category = part.Category == ActionCategory.Undefined ? String.Empty : part.Category.ToString();
+            target.EffectiveDate = part.EffectiveDate.Equals(DateTime.MinValue) ? String.Empty : part.EffectiveDate.ToString(FormatProvider.DateFormat);
+            target.Category = part.Category;
             target.Type = part.Type;
             target.Detail = part.Detail;
-
-            target.AllCategories = Enum.GetNames(typeof(ActionCategory)).Except(new[] { "Undefined" });
 
             return target;
         }
@@ -38,13 +36,7 @@ namespace CSM.Form100.Services
             else
                 throw new InvalidOperationException("Couldn't parse EffectiveDate in editor template.");
 
-            ActionCategory category;
-
-            if (Enum.TryParse(viewModel.Category, out category))
-                part.Category = category;
-            else
-                part.Category = ActionCategory.Undefined;
-
+            part.Category = viewModel.Category;
             part.Type = viewModel.Type;
             part.Detail = viewModel.Detail;
         }

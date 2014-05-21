@@ -13,10 +13,5 @@ namespace CSM.Form100.Models
         public virtual string Type { get; set; }
 
         public virtual string Detail { get; set; }
-
-        public ActionPartRecord()
-        {
-            Category = ActionCategory.Undefined;
-        }
     }
 }

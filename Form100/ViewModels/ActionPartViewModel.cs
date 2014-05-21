@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CSM.Form100.Models;
 
 namespace CSM.Form100.ViewModels
 {
@@ -9,13 +10,11 @@ namespace CSM.Form100.ViewModels
         public string EffectiveDate { get; set; }
         
         [Required]
-        public string Category { get; set; }
+        public ActionCategory Category { get; set; }
 
         [Required]
         public string Type { get; set; }
 
         public string Detail { get; set; }
-
-        public IEnumerable<string> AllCategories { get; set; }
     }
 }

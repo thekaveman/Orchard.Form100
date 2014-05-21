@@ -106,7 +106,7 @@ namespace CSM.Form100.Drivers
                 if (Enum.TryParse(c, out category))
                     part.Category = category;
                 else
-                    part.Category = ActionCategory.Undefined;
+                    throw new InvalidOperationException("Couldn't parse Category attribute to ActionCategory enum.");
             });
 
             context.ImportAttribute(actionNode.Name.LocalName, "Type", t => part.Type = t);
