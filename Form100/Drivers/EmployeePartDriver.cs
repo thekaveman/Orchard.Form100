@@ -138,7 +138,7 @@ namespace CSM.Form100.Drivers
             jobStepNode.SetAttributeValue("DivisionNumber", jobStep.DivisionNumber);
             jobStepNode.SetAttributeValue("StepNumber", jobStep.StepNumber);
             jobStepNode.SetAttributeValue("HoursPerWeek", jobStep.HoursPerWeek);
-            jobStepNode.SetAttributeValue("HourlyPay", jobStep.HourlyPay);
+            jobStepNode.SetAttributeValue("HourlyPay", jobStep.HourlyRate);
             
             return jobStepNode;
         }
@@ -186,7 +186,7 @@ namespace CSM.Form100.Drivers
             stringVar = jobStepNode.SafeGetAttribute("HourlyPay");
 
             if (decimal.TryParse(stringVar, out decimalVar))
-                jobStep.HourlyPay = decimalVar;
+                jobStep.HourlyRate = decimalVar;
             else
                 throw new InvalidOperationException(String.Format("Couldn't parse {0} node HourlyPay attribute to decimal.", jobStepNode.Name.LocalName));
 

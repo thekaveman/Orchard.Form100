@@ -1,0 +1,38 @@
+﻿@model CSM.Form100.ViewModels.JobStepRecordViewModel
+
+<h2>Job Class @Model.Qualifier</h2>
+
+<fieldset>
+    @Html.LabelFor(m => m.Title, T("Title"))
+    @Html.TextBoxFor(m => m.Title, new { @class = "text medium" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.DepartmentName, T("Department"))
+    @Html.TextBoxFor(m => m.DepartmentName, new { @class = "text medium" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.DivisionName, T("Division"))
+    @Html.TextBoxFor(m => m.DivisionName, new { @class = "text medium" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.DivisionNumber, T("Division Number"))
+    @Html.TextBoxFor(m => m.DivisionNumber, new { @class = "text medium" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.StepNumber, T("Step"))
+    @Html.TextBoxFor(m => m.StepNumber, new { @class = "text medium" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.HourlyRate, T("Basic Rate of Pay"))
+    @Html.TextBoxFor(m => m.HourlyRate, new { @class = "text medium" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.HoursPerWeek, T("Hours/Week"))
+    @Html.TextBoxFor(m => m.HoursPerWeek, new { @class = "text medium" })
+</fieldset>

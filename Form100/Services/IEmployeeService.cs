@@ -6,14 +6,18 @@ namespace CSM.Form100.Services
 {
     public interface IEmployeeService : IDependency
     {
+        EmployeePartViewModel GetEmployeeViewModel(EmployeePart part);
+
+        void UpdateEmployee(EmployeePartViewModel viewModel, EmployeePart part);
+
         JobStepRecord GetJobStep(int id);
-        
+
         JobStepRecord CreateJobStep();
 
-        JobStepRecord UpdateJobStep(JobStepRecord source);
+        JobStepRecord UpdateJobStep(JobStepRecord jobStep);
 
-        EmployeePartViewModel GetEmployeeViewModel(EmployeePart source);
+        JobStepRecordViewModel GetJobStepViewModel(JobStepRecord jobStep, string qualifier);
 
-        void UpdateEmployee(EmployeePartViewModel source, EmployeePart target);
+        JobStepRecord UpdateJobStep(JobStepRecordViewModel viewModel);
     }
 }

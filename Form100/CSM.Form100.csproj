@@ -106,6 +106,7 @@
     <Compile Include="Services\IReviewService.cs" />
     <Compile Include="ViewModels\ActionPartViewModel.cs" />
     <Compile Include="ViewModels\EmployeePartViewModel.cs" />
+    <Compile Include="ViewModels\JobStepRecordViewModel.cs" />
     <Compile Include="ViewModels\ReviewPartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Review.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\_JobStep.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

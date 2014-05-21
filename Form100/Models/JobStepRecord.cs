@@ -19,6 +19,6 @@ namespace CSM.Form100.Models
         
         public virtual int HoursPerWeek { get; set; }
 
-        public virtual decimal HourlyPay { get; set; }
+        public virtual decimal HourlyRate { get; set; }
     }
 }

@@ -1,12 +1,14 @@
 ﻿@model CSM.Form100.ViewModels.EmployeePartViewModel
 
+<h2>Employee Details</h2>
+
 <fieldset>
-    <legend>Employee Name</legend>
-
-    @Html.LabelFor(m => m.FirstName, T("First"))
+    @Html.LabelFor(m => m.FirstName, T("First name"))
     @Html.TextBoxFor(m => m.FirstName, new { @class = "text medium" })
+</fieldset>
 
-    @Html.LabelFor(m => m.LastName, T("Last"))
+<fieldset>
+    @Html.LabelFor(m => m.LastName, T("Last name"))
     @Html.TextBoxFor(m => m.LastName, new { @class = "text medium" })
 </fieldset>
 
@@ -14,3 +16,7 @@
     @Html.LabelFor(m => m.EmployeeId, T("Employee ID"))
     @Html.TextBoxFor(m => m.EmployeeId, new { @class = "text medium" })
 </fieldset>
+
+@Html.Partial("EditorTemplates/_JobStep", Model.CurrentJobStep)
+
+@Html.Partial("EditorTemplates/_JobStep", Model.PriorJobStep)
