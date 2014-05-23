@@ -1,0 +1,8 @@
+﻿table.items.approvalChain { margin-top: 1em; }
+
+table.approvalChain td:first-of-type { width: 5%; }
+table.approvalChain td:nth-of-type(2) { width: 25%; }
+
+@media screen and (min-width: 1300px) {
+    table.approvalChain td:nth-of-type(2) { width: 15%; }
+}

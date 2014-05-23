@@ -26,5 +26,10 @@ namespace CSM.Form100.ViewModels
 
         [Display(Name = "Job Class prior to Effective Date")]
         public JobStepRecordViewModel PriorJobStep { get; set; }
+
+        public EmployeePartViewModel()
+        {
+            NeedsPriorJobStepEditor = false;
+        }
     }
 }

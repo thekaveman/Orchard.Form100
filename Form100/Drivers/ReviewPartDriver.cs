@@ -22,7 +22,7 @@ namespace CSM.Form100.Drivers
 
         protected override string Prefix
         {
-            get { return "Review"; }
+            get { return "CSM_Form100_ReviewPart"; }
         }
 
         /// <summary>
@@ -62,7 +62,9 @@ namespace CSM.Form100.Drivers
         {
             var viewModel = new ReviewPartViewModel();
 
-            if (updater.TryUpdateModel(viewModel, Prefix, null, null))
+            bool success = updater.TryUpdateModel(viewModel, Prefix, null, null);
+
+            if (success)
             {
                 reviewService.UpdateReview(viewModel, part);
             }
@@ -80,18 +82,16 @@ namespace CSM.Form100.Drivers
 
             reviewNode.SetAttributeValue("Status", part.Status);
 
-            if (part.ApprovalChain.Any())
+            if (part.ApprovalChain != null && part.ApprovalChain.Any())
             {
-                var copy = new Queue<ReviewDecisionRecord>(part.ApprovalChain);
+                var copy = part.ApprovalChain.Copy();
 
                 var approvalChainNode = new XElement("ApprovalChain");
 
                 while (copy.Any())
                 {
                     var decisionRecord = copy.Dequeue();
-
                     var decisionRecordNode = createReviewDecisionNode(decisionRecord);
-
                     approvalChainNode.Add(decisionRecordNode);
                 }
 
@@ -125,9 +125,12 @@ namespace CSM.Form100.Drivers
             {
                 foreach (var reviewDecisionNode in approvalChainNode.Elements("ReviewDecision"))
                 {
-                    var reviewDecision = parseReviewDecisionNode(reviewDecisionNode);
+                    var decision = parseReviewDecisionNode(reviewDecisionNode);
 
-                    approvalChain.Enqueue(reviewDecision);
+                    if (decision.Id > 0)
+                        approvalChain.Enqueue(reviewService.UpdateReviewDecision(decision));
+                    else
+                        approvalChain.Enqueue(reviewService.CreateReviewDecision(decision));
                 }
             }
 
@@ -148,20 +151,20 @@ namespace CSM.Form100.Drivers
 
         private ReviewDecisionRecord parseReviewDecisionNode(XElement reviewDecisionNode)
         {
-            var reviewDecision = reviewService.CreateReviewDecision();
-
+            ReviewDecisionRecord reviewDecision;
             int id;
 
             if (int.TryParse(reviewDecisionNode.SafeGetAttribute("Id"), out id))
-                reviewDecision.Id = id;
+                reviewDecision = reviewService.GetReviewDecision(id) ?? new ReviewDecisionRecord();
             else
-                throw new InvalidOperationException("Couldn't parse Id attribute of ReviewDecision node to int.");
+                reviewDecision = new ReviewDecisionRecord();
 
-            bool approved = false;
+            bool approved;
 
-            bool.TryParse(reviewDecisionNode.SafeGetAttribute("IsApproved"), out approved);
-
-            reviewDecision.IsApproved = approved;
+            if (bool.TryParse(reviewDecisionNode.SafeGetAttribute("IsApproved"), out approved))
+                reviewDecision.IsApproved = approved;
+            else
+                reviewDecision.IsApproved = null;
 
             DateTime reviewDate;
 

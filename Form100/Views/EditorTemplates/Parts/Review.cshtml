@@ -2,13 +2,62 @@
 
 @{ 
     Script.Require("jQuery");
+    Script.Require("jQueryUI");
+    Style.Include("reviewPartEdit.css");
 }
+
+<fieldset>
+    <legend>
+        Required Approval(s)
+    </legend>
+
+    <span data-bind="visible: approvalChain().length < 1">No reviewers have been assigned yet</span>
+
+    <table class="approvalChain items" data-bind="sortable: approvalChain">
+        <tr>
+            <td>
+                <span data-bind="text: $index() + 1"></span>.
+            </td>
+            <td>
+                <span data-bind="text: ReviewerName"></span>
+            </td>
+            <td>
+                <a class="button primaryAction" href="#" data-bind="click: $parent.removeReviewer">Remove</a>
+            </td>
+        </tr>
+    </table>
+
+</fieldset>
+
+<fieldset>
+    <label>New Reviewer</label>
+    <input type="text" class="text" data-bind="value: name, valueUpdate: 'afterkeydown'" placeholder="First Last" />
+    <input type="text" class="text" data-bind="value: email, valueUpdate: 'afterkeydown'" placeholder="email@example.com" />
+    <a class="button primaryAction"  href="#" data-bind="click: addReviewer">Add</a>
+</fieldset>
+
+<fieldset>
+    <label>Raw Data</label>
+    <span data-bind="text: approvalChainJSON"></span>
+    @Html.HiddenFor(m => m.ApprovalChainData, new { data_bind = "value: approvalChainJSON" })
+</fieldset>
 
 <fieldset>
     @Html.LabelFor(m => m.Status, T("Status"))
     @Html.TextBoxFor(m => m.Status, new { disabled = "true" })
 </fieldset>
 
-<fieldset>
+@using (Script.Foot())
+{
+    Script.Include("http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js");
+    Script.Include("knockout-sortable.min.js");    
+    Script.Include("reviewPartEdit.js");
     
-</fieldset>
+    <script type="text/javascript">
+        var approvalChainData = '@Model.ApprovalChainData'.replace(/&quot;/g, '"');
+        var approvalChain = JSON.parse(approvalChainData);
+        var viewModel = new approvalChainViewModel(approvalChain);
+        
+        ko.applyBindings(viewModel);
+    </script>
+}

@@ -12,6 +12,8 @@ namespace CSM.Form100.Services
 
         ReviewDecisionRecord GetReviewDecision(int id);
 
-        ReviewDecisionRecord CreateReviewDecision();
+        ReviewDecisionRecord CreateReviewDecision(ReviewDecisionRecord decision);
+
+        ReviewDecisionRecord UpdateReviewDecision(ReviewDecisionRecord decision);
     }
 }
