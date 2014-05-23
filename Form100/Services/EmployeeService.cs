@@ -23,7 +23,7 @@ namespace CSM.Form100.Services
             viewModel.FirstName = part.FirstName;
             viewModel.LastName = part.LastName;
 
-            bool needsPriorJobStepEditor = true;
+            bool needsPriorJobStepEditor = false;
             string effectiveDate = "Effective Date";
             ActionPart actionPart = part.As<ActionPart>();
 
