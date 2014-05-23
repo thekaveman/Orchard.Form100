@@ -16,9 +16,9 @@ namespace CSM.Form100
                 typeof(ActionPartRecord).Name,
                 table => table
                     .ContentPartRecord()
-                    .Column<DateTime>("EffectiveDate", col => col.NotNull())
-                    .Column<ActionCategory>("Category", col => col.NotNull())
-                    .Column<string>("Type", col => col.NotNull())
+                    .Column<DateTime>("EffectiveDate", col => col.Nullable())
+                    .Column<string>("Category")
+                    .Column<string>("Type")
                     .Column<string>("Detail")
             );
 
@@ -26,9 +26,9 @@ namespace CSM.Form100
                 typeof(EmployeePartRecord).Name,
                 table => table
                     .ContentPartRecord()
-                    .Column<int>("EmployeeId", col => col.NotNull())
-                    .Column<string>("FirstName", col => col.NotNull())
-                    .Column<string>("LastName", col => col.NotNull())
+                    .Column<int>("EmployeeId")
+                    .Column<string>("FirstName")
+                    .Column<string>("LastName")
                     .Column<int>("CurrentJobStep_Id", col => col.Nullable())
                     .Column<int>("PriorJobStep_Id", col => col.Nullable())                    
             );
@@ -38,7 +38,7 @@ namespace CSM.Form100
                 table => table
                     .ContentPartRecord()
                     .Column<string>("ApprovalChainIds", col => col.Unlimited())
-                    .Column<WorkflowStatus>("Status", col => col.NotNull())
+                    .Column<string>("Status")
             );
 
 			// creating tables for non-part record classes
@@ -47,22 +47,24 @@ namespace CSM.Form100
                 typeof(JobStepRecord).Name,
                 table => table
 				    .Column<int>("Id", col => col.PrimaryKey().Identity())
-                    .Column<string>("Title", col => col.NotNull())
-                    .Column<string>("DepartmentName", col => col.NotNull())
-                    .Column<string>("DivisionName", col => col.NotNull())
-                    .Column<int>("DivisionNumber", col => col.NotNull())
-                    .Column<int>("StepNumber", col => col.NotNull())
-                    .Column<int>("HoursPerWeek", col => col.NotNull())
-                    .Column<decimal>("HourlyRate", col => col.NotNull().WithPrecision((byte)10).WithScale((byte)2))
+                    .Column<string>("Title")
+                    .Column<string>("DepartmentName")
+                    .Column<string>("DivisionName")
+                    .Column<int>("DivisionNumber")
+                    .Column<int>("StepNumber")
+                    .Column<int>("HoursPerWeek")
+                    .Column<decimal>("HourlyRate", col => col.WithPrecision((byte)10).WithScale((byte)2))
 			);
 
 			SchemaBuilder.CreateTable(
                 typeof(ReviewDecisionRecord).Name,
                 table => table
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<int>("ReviewPartId", col => col.Nullable())
                     .Column<bool>("IsApproved", col => col.Nullable())
                     .Column<DateTime>("ReviewDate", col => col.Nullable())
-                    .Column<string>("ReviewerName", col => col.NotNull())
+                    .Column<string>("ReviewerName")
+                    .Column<string>("ReviewerEmail")
 			);
 
             // defining the content parts that make up a Form 100
