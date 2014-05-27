@@ -30,10 +30,11 @@
 </fieldset>
 
 <fieldset>
-    <label>New Reviewer</label>
+    <label>New Review Step</label>
     <input type="text" class="text" data-bind="value: name, valueUpdate: 'afterkeydown'" placeholder="First Last" />
     <input type="text" class="text" data-bind="value: email, valueUpdate: 'afterkeydown'" placeholder="email@example.com" />
-    <a class="button primaryAction"  href="#" data-bind="click: addReviewer">Add</a>
+    <select data-bind="options: availableStatuses, value: targetStatus"></select>
+    <a class="button primaryAction" href="#" data-bind="click: addReviewer">Add</a>
 </fieldset>
 
 <fieldset>
@@ -54,9 +55,9 @@
     Script.Include("reviewPartEdit.js");
     
     <script type="text/javascript">
-        var approvalChainData = '@Model.ApprovalChainData'.replace(/&quot;/g, '"');
-        var approvalChain = JSON.parse(approvalChainData);
-        var viewModel = new approvalChainViewModel(approvalChain);
+        var approvalChain = JSON.parse('@Model.ApprovalChainData'.replace(/&quot;/g, '"'));
+        var availableStatuses = JSON.parse('@Model.AvailableStatuses'.replace(/&quot;/g, '"'));
+        var viewModel = new approvalChainViewModel(approvalChain, availableStatuses);
         
         ko.applyBindings(viewModel);
     </script>

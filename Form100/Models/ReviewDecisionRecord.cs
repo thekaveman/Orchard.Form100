@@ -6,9 +6,9 @@ namespace CSM.Form100.Models
     {
         public virtual int Id { get; set; }
 
-        public virtual int ReviewPartId { get; set; }
+        public virtual string ReviewPartIdentifier { get; set; }
 
-        public virtual bool? IsApproved { get; set; }
+        public virtual WorkflowStatus TargetStatus { get; set; }
 
         public virtual DateTime? ReviewDate { get; set; }
 
@@ -18,7 +18,7 @@ namespace CSM.Form100.Models
 
         public ReviewDecisionRecord()
         {
-            IsApproved = null;
+            TargetStatus = WorkflowStatus.Undefined;
             ReviewDate = null;
         }
     }

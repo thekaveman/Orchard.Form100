@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using CSM.Form100.Models;
 using CSM.Form100.ViewModels;
 using Newtonsoft.Json;
+using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 
 namespace CSM.Form100.Services
@@ -38,7 +39,8 @@ namespace CSM.Form100.Services
 
             if (!String.IsNullOrEmpty(viewModel.ApprovalChainData))
             {
-                deserializedApprovalChain = new Queue<ReviewDecisionRecord>(deserializeApprovalChain(viewModel.ApprovalChainData, part.Id));
+                var identityPart = part.As<IdentityPart>();
+                deserializedApprovalChain = new Queue<ReviewDecisionRecord>(deserializeApprovalChain(viewModel.ApprovalChainData, identityPart.Identifier ?? part.Id.ToString()));
             }
 
             part.ApprovalChain = deserializedApprovalChain;
@@ -65,18 +67,17 @@ namespace CSM.Form100.Services
             return decision;
         }
 
-        internal Queue<ReviewDecisionRecord> deserializeApprovalChain(string approvalChainData, int approvalChainId)
+        internal Queue<ReviewDecisionRecord> deserializeApprovalChain(string approvalChainData, string reviewPartId)
         {
             var approvalChain = new Queue<ReviewDecisionRecord>();
-            var reviewerTemplate = new { Id = 0, IsApproved = false, ReviewDate = default(DateTime?), ReviewerName = "", ReviewerEmail = "" };
-            var reviewersData = JsonConvert.DeserializeAnonymousType(approvalChainData, new[] { reviewerTemplate });
+            var reviewersData = JsonConvert.DeserializeObject<IEnumerable<ReviewDecisionRecord>>(approvalChainData);
 
             foreach(var reviewerData in reviewersData)
             {
                 var reviewDecision = new ReviewDecisionRecord() {
                     Id =  reviewerData.Id,
-                    ReviewPartId = approvalChainId,
-                    IsApproved = reviewerData.IsApproved,
+                    ReviewPartIdentifier = reviewPartId,
+                    TargetStatus = reviewerData.TargetStatus,
                     ReviewDate = reviewerData.ReviewDate,
                     ReviewerName = reviewerData.ReviewerName,
                     ReviewerEmail = reviewerData.ReviewerEmail

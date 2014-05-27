@@ -62,9 +62,7 @@ namespace CSM.Form100.Drivers
         {
             var viewModel = new ReviewPartViewModel();
 
-            bool success = updater.TryUpdateModel(viewModel, Prefix, null, null);
-
-            if (success)
+            if (updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableStatuses" }))
             {
                 reviewService.UpdateReview(viewModel, part);
             }
@@ -84,10 +82,9 @@ namespace CSM.Form100.Drivers
 
             if (part.ApprovalChain != null && part.ApprovalChain.Any())
             {
-                var copy = part.ApprovalChain.Copy();
-
                 var approvalChainNode = new XElement("ApprovalChain");
-
+                var copy = part.ApprovalChain.Copy();
+                
                 while (copy.Any())
                 {
                     var decisionRecord = copy.Dequeue();
@@ -126,11 +123,7 @@ namespace CSM.Form100.Drivers
                 foreach (var reviewDecisionNode in approvalChainNode.Elements("ReviewDecision"))
                 {
                     var decision = parseReviewDecisionNode(reviewDecisionNode);
-
-                    if (decision.Id > 0)
-                        approvalChain.Enqueue(reviewService.UpdateReviewDecision(decision));
-                    else
-                        approvalChain.Enqueue(reviewService.CreateReviewDecision(decision));
+                    approvalChain.Enqueue(reviewService.CreateReviewDecision(decision));
                 }
             }
 
@@ -141,30 +134,27 @@ namespace CSM.Form100.Drivers
         {
             var reviewDecisionNode = new XElement("ReviewDecision");
 
-            reviewDecisionNode.SetAttributeValue("Id", reviewDecision.Id);
-            reviewDecisionNode.SetAttributeValue("IsApproved", reviewDecision.IsApproved);
+            reviewDecisionNode.SetAttributeValue("ReviewPartIdentifier", reviewDecision.ReviewPartIdentifier);
+            reviewDecisionNode.SetAttributeValue("TargetStatus", reviewDecision.TargetStatus);
             reviewDecisionNode.SetAttributeValue("ReviewDate", reviewDecision.ReviewDate.HasValue ? reviewDecision.ReviewDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
             reviewDecisionNode.SetAttributeValue("ReviewerName", reviewDecision.ReviewerName);
+            reviewDecisionNode.SetAttributeValue("ReviewerEmail", reviewDecision.ReviewerEmail);
 
             return reviewDecisionNode;
         }
 
         private ReviewDecisionRecord parseReviewDecisionNode(XElement reviewDecisionNode)
         {
-            ReviewDecisionRecord reviewDecision;
-            int id;
+            ReviewDecisionRecord reviewDecision = new ReviewDecisionRecord();
+            
+            reviewDecision.ReviewPartIdentifier = reviewDecisionNode.SafeGetAttribute("ReviewPartIdentifier");
 
-            if (int.TryParse(reviewDecisionNode.SafeGetAttribute("Id"), out id))
-                reviewDecision = reviewService.GetReviewDecision(id) ?? new ReviewDecisionRecord();
+            WorkflowStatus targetStatus;
+
+            if (Enum.TryParse(reviewDecisionNode.SafeGetAttribute("TargetStatus"), out targetStatus))
+                reviewDecision.TargetStatus = targetStatus;
             else
-                reviewDecision = new ReviewDecisionRecord();
-
-            bool approved;
-
-            if (bool.TryParse(reviewDecisionNode.SafeGetAttribute("IsApproved"), out approved))
-                reviewDecision.IsApproved = approved;
-            else
-                reviewDecision.IsApproved = null;
+                reviewDecision.TargetStatus = WorkflowStatus.Undefined;
 
             DateTime reviewDate;
 
@@ -174,6 +164,8 @@ namespace CSM.Form100.Drivers
                 reviewDecision.ReviewDate = null;
 
             reviewDecision.ReviewerName = reviewDecisionNode.SafeGetAttribute("ReviewerName");
+
+            reviewDecision.ReviewerEmail = reviewDecisionNode.SafeGetAttribute("ReviewerEmail");
 
             return reviewDecision;
         }

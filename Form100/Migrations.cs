@@ -60,8 +60,8 @@ namespace CSM.Form100
                 typeof(ReviewDecisionRecord).Name,
                 table => table
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
-                    .Column<int>("ReviewPartId", col => col.Nullable())
-                    .Column<bool>("IsApproved", col => col.Nullable())
+                    .Column<string>("ReviewPartIdentifier", col => col.Nullable())
+                    .Column<string>("TargetStatus")
                     .Column<DateTime>("ReviewDate", col => col.Nullable())
                     .Column<string>("ReviewerName")
                     .Column<string>("ReviewerEmail")

@@ -1,24 +1,26 @@
-﻿function reviewer(name, email) {
+﻿function reviewer(name, email, status) {
     return {
         Id: 0,
-        ReviewPartId: 0,
-        IsApproved: false,
-        ReviewDate: null,
+        ReviewPartIdentifier: "",
+        TargetStatus: status,
         ReviewerName: name,
-        ReviewerEmail: email
+        ReviewerEmail: email,
+        ReviewDate: null
     };
 }
 
-function approvalChainViewModel(initChain) {
+function approvalChainViewModel(initChain, initStatuses) {
     var self = this;
 
-    self.approvalChain = ko.observableArray(initChain);
+    self.approvalChain = ko.observableArray(initChain || []);
+    self.availableStatuses = ko.observableArray(initStatuses || []);
     self.name = ko.observable("");
     self.email = ko.observable("");
+    self.targetStatus = ko.observable("Undefined");
 
     self.reviewerToAdd = ko.computed(function () {
-        if (!(self.name() === "" || self.email() === ""))
-            return reviewer(self.name(), self.email().toLowerCase());
+        if (!(self.name() === "" || self.email() === "" || self.targetStatus() === "Undefined"))
+            return reviewer(self.name(), self.email().toLowerCase(), self.targetStatus());
         else
             return null;
     });
@@ -33,6 +35,7 @@ function approvalChainViewModel(initChain) {
             self.approvalChain.push(reviewer);
             self.name("");
             self.email("");
+            self.targetStatus("Undefined");
         }
     };
 
@@ -41,9 +44,6 @@ function approvalChainViewModel(initChain) {
     };
 
     self.cardinality = function () {
-        var t = this;
-        var ac = self.approvalChain();
-        var i = ac.indexOf(t);
-        return i + 1;
+        return self.approvalChain().indexOf(this) + 1;
     };
 }

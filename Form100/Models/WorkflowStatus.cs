@@ -4,22 +4,25 @@ namespace CSM.Form100.Models
 {
     public enum WorkflowStatus
     {
-        [Description("Approved")]
-        Approved,
-
-        [Description("In Progress")]
-        InProgress,
+        [Description("Undefined")]
+        Undefined,
 
         [Description("New")]
         New,
         
-        [Description("Pending")]
-        Pending,
-
-        [Description("Rejected")]
-        Rejected,
+        [Description("In Progress")]
+        InProgress,
 
         [Description("Submitted")]
         Submitted,
+
+        [Description("Pending")]
+        Pending,
+
+        [Description("Approved")]
+        Approved,
+
+        [Description("Rejected")]
+        Rejected
     }
 }

@@ -9,7 +9,7 @@ namespace CSM.Form100.Models
         public virtual string ApprovalChainIds { get; set; }
 
         public virtual WorkflowStatus Status { get; set; }
-
+        
         public ReviewPartRecord()
         {
             Status = WorkflowStatus.New;
