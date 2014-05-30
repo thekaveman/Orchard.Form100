@@ -30,7 +30,7 @@ namespace CSM.Form100.Services
 
             if (actionPart != null && actionPart.EffectiveDate.HasValue)
             {
-                effectiveDate = actionPart.EffectiveDate.Value.ToString(FormatProvider.DateFormat);
+                effectiveDate = actionPart.EffectiveDate.Value.ToString("MM/dd/yyyy");
                 needsPriorJobStepEditor = actionPart.Category == ActionCategory.Change;
             }
 

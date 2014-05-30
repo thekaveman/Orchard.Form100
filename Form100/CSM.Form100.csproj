@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
+    <Content Include="pseudocode.txt" />
     <Content Include="Scripts\knockout-sortable.min.js" />
     <Content Include="Scripts\reviewPartEdit.js" />
     <Content Include="Styles\reviewPartEdit.css" />
@@ -117,7 +118,6 @@
     <Compile Include="WorkflowStatus.cs" />
     <Compile Include="Services\ActionService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
-    <Compile Include="Services\FormatProvider.cs" />
     <Compile Include="Services\IActionService.cs" />
     <Compile Include="Services\IEmployeeService.cs" />
     <Compile Include="Services\ReviewService.cs" />

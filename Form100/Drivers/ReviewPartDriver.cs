@@ -165,7 +165,7 @@ namespace CSM.Form100.Drivers
             reviewStepNode.SetAttributeValue("ReviewPartIdentifier", reviewStep.ReviewPartIdentifier);
             reviewStepNode.SetAttributeValue("ApprovingStatus", reviewStep.ApprovingStatus);
             reviewStepNode.SetAttributeValue("RejectingStatus", reviewStep.RejectingStatus);
-            reviewStepNode.SetAttributeValue("ReviewDate", reviewStep.ReviewDate.HasValue ? reviewStep.ReviewDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
+            reviewStepNode.SetAttributeValue("ReviewDate", reviewStep.ReviewDate.HasValue ? reviewStep.ReviewDate.Value.ToString() : String.Empty);
             reviewStepNode.SetAttributeValue("ReviewDecision", reviewStep.ReviewDecision);
             reviewStepNode.SetAttributeValue("ReviewerName", reviewStep.ReviewerName);
             reviewStepNode.SetAttributeValue("ReviewerEmail", reviewStep.ReviewerEmail);

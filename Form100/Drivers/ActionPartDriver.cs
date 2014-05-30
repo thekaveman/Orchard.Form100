@@ -76,7 +76,7 @@ namespace CSM.Form100.Drivers
         {
             var actionNode = context.Element(part.PartDefinition.Name);
 
-            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
+            actionNode.SetAttributeValue("EffectiveDate", part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString() : String.Empty);
             actionNode.SetAttributeValue("Category", part.Category.ToString());
             actionNode.SetAttributeValue("Type", part.Type);
             actionNode.SetAttributeValue("Detail", part.Detail);

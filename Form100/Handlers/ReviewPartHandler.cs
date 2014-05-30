@@ -34,14 +34,13 @@ namespace CSM.Form100.Handlers
             });
 
             OnUpdating<ReviewPart>((context, part) => {
-                loaders(part, () => notifier.Information(T("OnUpdating")));
-                setters(part, () => notifier.Information(T("OnUpdating")));
+                updaters(part, () => notifier.Information(T("OnUpdating")));
             });
 
-            OnPublishing<ReviewPart>((context, part) => {
-                loaders(part, () => notifier.Information(T("OnPublishing")));
-                setters(part, () => notifier.Information(T("OnPublishing")))
-            });
+            //OnPublishing<ReviewPart>((context, part) => {
+            //    loaders(part, () => notifier.Information(T("OnPublishing")));
+            //    setters(part, () => notifier.Information(T("OnPublishing")))
+            //});
         }
 
         public Localizer T { get; set; }
@@ -83,43 +82,27 @@ namespace CSM.Form100.Handlers
         {
             part.PendingReviewsField.Setter(pendingReviews => {
                 notify();
-
-                StringBuilder pendingReviewIds = new StringBuilder();
-
-                if (pendingReviews.Any())
-                {
-                    var copy = pendingReviews.Copy();
-
-                    while (copy.Any())
-                    {
-                        pendingReviewIds.AppendFormat("{0}{1}", copy.Dequeue().Id, separator);
-                    }
-                }
-
-                part.Record.PendingReviewsIds = pendingReviewIds.ToString().TrimEnd(separator);
+                
+                part.Record.PendingReviewsIds = serializeReviewSteps(pendingReviews);
 
                 return pendingReviews;
             });
 
             part.ReviewHistoryField.Setter(reviewHistory => {
                 notify();
-
-                StringBuilder reviewHistoryIds = new StringBuilder();
-
-                if (reviewHistory.Any())
-                {
-                    var copy = reviewHistory.Copy();
-
-                    while (copy.Any())
-                    {
-                        reviewHistoryIds.AppendFormat("{0}{1}", copy.Pop().Id, separator);
-                    }
-                }
-
-                part.Record.ReviewHistoryIds = reviewHistoryIds.ToString().TrimEnd(separator);
+                
+                part.Record.ReviewHistoryIds = serializeReviewSteps(reviewHistory);
 
                 return reviewHistory;
             });
+        }
+
+        private void updaters(ReviewPart part, Action notify)
+        {
+            notify();
+
+            part.Record.PendingReviewsIds = serializeReviewSteps(part.PendingReviews);
+            part.Record.ReviewHistoryIds = serializeReviewSteps(part.ReviewHistory);
         }
 
         private IEnumerable<ReviewStepRecord> parseReviewStepIds(string ids)
@@ -128,6 +111,18 @@ namespace CSM.Form100.Handlers
                                  .Select(id => reviewService.GetReviewStep(int.Parse(id)));
 
             return reviewSteps;
+        }
+
+        private string serializeReviewSteps(IEnumerable<ReviewStepRecord> reviewSteps)
+        {
+            StringBuilder reviewStepIds = new StringBuilder();
+
+            foreach (var step in reviewSteps)
+            {
+                reviewStepIds.AppendFormat("{0}{1}", step.Id, separator);
+            }
+
+            return reviewStepIds.ToString().TrimEnd(separator);
         }
     }
 }

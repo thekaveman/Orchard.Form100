@@ -30,7 +30,7 @@ namespace CSM.Form100
                     .Column<string>("FirstName")
                     .Column<string>("LastName")
                     .Column<int>("CurrentJobStep_Id", col => col.Nullable())
-                    .Column<int>("PriorJobStep_Id", col => col.Nullable())                    
+                    .Column<int>("PriorJobStep_Id", col => col.Nullable())
             );
 
             SchemaBuilder.CreateTable(

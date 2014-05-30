@@ -13,17 +13,13 @@ namespace CSM.Form100.Controllers
 {
     public class ReviewsController : Controller
     {
-        private readonly string signal = "ReviewStepDone";
-
         private readonly Lazy<IContentManager> contentManager;
         private readonly Lazy<IReviewService> reviewService;
-        private readonly Lazy<IWorkflowManager> workflowManager;
 
-        public ReviewsController(Lazy<IContentManager> contentManager, Lazy<IReviewService> reviewService, Lazy<IWorkflowManager> workflowManager)
+        public ReviewsController(Lazy<IContentManager> contentManager, Lazy<IReviewService> reviewService)
         {
             this.contentManager = contentManager;
             this.reviewService = reviewService;
-            this.workflowManager = workflowManager;
         }
 
         public ActionResult Index(int id = -1)
@@ -57,20 +53,37 @@ namespace CSM.Form100.Controllers
 
             if (reviewPart.PendingReviews.Any())
             {
-                var nextReview = reviewPart.PendingReviews.Dequeue();
+                var nextStep = getNextStep(reviewPart);
 
-                if (status == nextReview.ApprovingStatus || status == nextReview.RejectingStatus)
+                if (status == nextStep.ApprovingStatus || status == nextStep.RejectingStatus)
                 {
-                    nextReview.ReviewDate = DateTime.Now;
-                    nextReview.ReviewDecision = status;
-                    nextReview = reviewService.Value.UpdateReviewStep(nextReview);
-
                     reviewPart.Status = status;
-                    reviewPart.ReviewHistory.Push(nextReview);
+
+                    nextStep.ReviewDate = DateTime.Now;
+                    nextStep.ReviewDecision = status;
+                    nextStep = reviewService.Value.UpdateReviewStep(nextStep);
+                    
+                    completeStep(reviewPart, nextStep);
 
                     contentManager.Value.Publish(contentItem);
                 }
             }
+        }
+
+        private ReviewStepRecord getNextStep(ReviewPart reviewPart)
+        {
+            var nextStep = reviewPart.PendingReviews.Dequeue();
+
+            reviewPart.PendingReviews = reviewPart.PendingReviews.Copy();
+
+            return nextStep;
+        }
+
+        private void completeStep(ReviewPart reviewPart, ReviewStepRecord step)
+        {
+            reviewPart.ReviewHistory.Push(step);
+
+            reviewPart.ReviewHistory = reviewPart.ReviewHistory.Copy();
         }
     }
 }
