@@ -1,49 +1,61 @@
-﻿function reviewer(name, email, status) {
+﻿function reviewStep(name, email, approvingStatus, rejectingStatus, defaultStatus) {
     return {
         Id: 0,
         ReviewPartIdentifier: "",
-        TargetStatus: status,
+        ApprovingStatus: approvingStatus,
+        RejectingStatus: rejectingStatus,
         ReviewerName: name,
         ReviewerEmail: email,
-        ReviewDate: null
+        ReviewDate: null,
+        ReviewDecision: defaultStatus
     };
 }
 
-function approvalChainViewModel(initChain, initStatuses) {
+function reviewsViewModel(initChain, initStatuses, defaultStatus) {
     var self = this;
 
-    self.approvalChain = ko.observableArray(initChain || []);
+    self.reviews = ko.observableArray(initChain || []);
     self.availableStatuses = ko.observableArray(initStatuses || []);
     self.name = ko.observable("");
     self.email = ko.observable("");
-    self.targetStatus = ko.observable("Undefined");
+    self.approvingStatus = ko.observable(defaultStatus);
+    self.rejectingStatus = ko.observable(defaultStatus);
 
-    self.reviewerToAdd = ko.computed(function () {
-        if (!(self.name() === "" || self.email() === "" || self.targetStatus() === "Undefined"))
-            return reviewer(self.name(), self.email().toLowerCase(), self.targetStatus());
+    self.stepToAdd = ko.computed(function () {
+        if (!(self.name() === "" || self.email() === "" || self.approvingStatus() === defaultStatus || self.rejectingStatus() === defaultStatus))
+            return reviewStep(self.name(), self.email().toLowerCase(), self.approvingStatus(), self.rejectingStatus());
         else
             return null;
     });
 
-    self.approvalChainJSON = ko.computed(function () {
-        return JSON.stringify(self.approvalChain());
+    self.reviewsJSON = ko.computed(function () {
+        return JSON.stringify(self.reviews());
     });
 
-    self.addReviewer = function () {
-        var reviewer = self.reviewerToAdd();
-        if (reviewer) {
-            self.approvalChain.push(reviewer);
+    self.addReviewStep = function () {
+        var step = self.stepToAdd();
+        if (step) {
+            self.reviews.push(step);
             self.name("");
             self.email("");
-            self.targetStatus("Undefined");
+            self.approvingStatus(defaultStatus);
+            self.rejectingStatus(defaultStatus);
         }
     };
 
-    self.removeReviewer = function () {
-        self.approvalChain.remove(this);
+    self.editReviewStep = function () {
+        self.name(this.ReviewerName);
+        self.email(this.ReviewerEmail);
+        self.approvingStatus(this.ApprovingStatus);
+        self.rejectingStatus(this.RejectingStatus);
+        self.reviews.remove(this);
+    };
+
+    self.removeReviewStep = function () {
+        self.reviews.remove(this);
     };
 
     self.cardinality = function () {
-        return self.approvalChain().indexOf(this) + 1;
+        return self.reviews().indexOf(this) + 1;
     };
 }

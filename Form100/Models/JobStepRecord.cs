@@ -7,6 +7,8 @@ namespace CSM.Form100.Models
     {
         public virtual int Id { get; set; }
 
+        public virtual string EmployeePartIdentifier { get; set; }
+
         public virtual string Title { get; set; }
 
         public virtual string DepartmentName { get; set; }

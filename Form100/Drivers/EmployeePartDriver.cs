@@ -140,8 +140,8 @@ namespace CSM.Form100.Drivers
         private XElement createJobStepNode(string name, JobStepRecord jobStep)
         {
             var jobStepNode = new XElement(name);
-            
-            jobStepNode.SetAttributeValue("Id", jobStep.Id);
+
+            jobStepNode.SetAttributeValue("EmployeePartIdentifier", jobStep.EmployeePartIdentifier);
             jobStepNode.SetAttributeValue("Title", jobStep.Title);
             jobStepNode.SetAttributeValue("DepartmentName", jobStep.DepartmentName);
             jobStepNode.SetAttributeValue("DivisionName", jobStep.DivisionName);
@@ -155,17 +155,15 @@ namespace CSM.Form100.Drivers
 
         private JobStepRecord parseJobStepNode(XElement jobStepNode)
         {
-            JobStepRecord jobStep;
+            JobStepRecord jobStep = new JobStepRecord()
+            {
+                EmployeePartIdentifier = jobStepNode.SafeGetAttribute("EmployeePartIdentifier"),
+                Title = jobStepNode.SafeGetAttribute("Title"),
+                DepartmentName = jobStepNode.SafeGetAttribute("DepartmentName"),
+                DivisionName = jobStepNode.SafeGetAttribute("DivisionName")
+            };
+            
             int intVar;
-
-            if (int.TryParse(jobStepNode.SafeGetAttribute("Id"), out intVar))
-                jobStep = employeeService.GetJobStep(intVar) ?? new JobStepRecord();
-            else
-                jobStep = new JobStepRecord();
-
-            jobStep.Title = jobStepNode.SafeGetAttribute("Title");
-            jobStep.DepartmentName = jobStepNode.SafeGetAttribute("DepartmentName");
-            jobStep.DivisionName = jobStepNode.SafeGetAttribute("DivisionName");
 
             if (int.TryParse(jobStepNode.SafeGetAttribute("DivisionNumber"), out intVar))
                 jobStep.DivisionNumber = intVar;

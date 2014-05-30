@@ -1,0 +1,14 @@
+while (Status is "Rejected" and there are additional reviews) or (Status is not "Accepted" or "Rejected")
+	
+	identify the next reviewer (R)
+	
+	if (R) should be included in additional reviews
+		add (R) to a list of additional reviews	
+	
+	notify (R)
+	
+	if (R) accepts
+		set Status to (R)'s accepting status
+
+	if (R) rejects
+		set Status to (R)'s rejecting status

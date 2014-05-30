@@ -6,59 +6,101 @@
     Style.Include("reviewPartEdit.css");
 }
 
-<fieldset>
-    <legend>
-        Required Approval(s)
-    </legend>
+<div id="pendingReviews">
 
-    <span data-bind="visible: approvalChain().length < 1">No reviewers have been assigned yet</span>
+    <fieldset>
+        <legend>
+            Required Approval(s)
+        </legend>
 
-    <table class="approvalChain items" data-bind="sortable: approvalChain">
-        <tr>
-            <td>
-                <span data-bind="text: $index() + 1"></span>.
-            </td>
-            <td>
-                <span data-bind="text: ReviewerName"></span>
-            </td>
-            <td>
-                <a class="button primaryAction" href="#" data-bind="click: $parent.removeReviewer">Remove</a>
-            </td>
-        </tr>
-    </table>
+        <span data-bind="visible: reviews().length < 1">No reviewers have been assigned yet</span>
 
-</fieldset>
+        <table class="pendingReviews items" data-bind="sortable: reviews">
+            <tr>
+                <td>
+                    <span data-bind="text: $index() + 1"></span>.
+                </td>
+                <td>
+                    <span data-bind="text: ReviewerName"></span>
+                    (<span data-bind="text: ApprovingStatus"></span>,
+                    <span data-bind="text: RejectingStatus"></span>)
+                </td>
+                <td>
+                    <a class="button primaryAction" href="#" data-bind="click: $parent.editReviewStep">Edit</a>
+                    <a class="button primaryAction" href="#" data-bind="click: $parent.removeReviewStep">Remove</a>
+                </td>
+            </tr>
+        </table>
 
-<fieldset>
-    <label>New Review Step</label>
-    <input type="text" class="text" data-bind="value: name, valueUpdate: 'afterkeydown'" placeholder="First Last" />
-    <input type="text" class="text" data-bind="value: email, valueUpdate: 'afterkeydown'" placeholder="email@example.com" />
-    <select data-bind="options: availableStatuses, value: targetStatus"></select>
-    <a class="button primaryAction" href="#" data-bind="click: addReviewer">Add</a>
-</fieldset>
+    </fieldset>
 
-<fieldset>
-    <label>Raw Data</label>
-    <span data-bind="text: approvalChainJSON"></span>
-    @Html.HiddenFor(m => m.ApprovalChainData, new { data_bind = "value: approvalChainJSON" })
-</fieldset>
+    <fieldset>
+        <label>New Review Step</label>
+        <input type="text" class="text" data-bind="value: name, valueUpdate: 'afterkeydown'" placeholder="First Last" />
+        <input type="text" class="text" data-bind="value: email, valueUpdate: 'afterkeydown'" placeholder="email@example.com" />
+        <select data-bind="options: availableStatuses, value: approvingStatus"></select>
+        <select data-bind="options: availableStatuses, value: rejectingStatus"></select>
+        <a class="button primaryAction" href="#" data-bind="click: addReviewStep">Add</a>
+    </fieldset>
 
-<fieldset>
-    @Html.LabelFor(m => m.Status, T("Status"))
-    @Html.TextBoxFor(m => m.Status, new { disabled = "true" })
-</fieldset>
+    <fieldset>
+        <label>Raw Data</label>
+        <span data-bind="text: reviewsJSON"></span>
+        @Html.HiddenFor(m => m.PendingReviewsData, new { data_bind = "value: reviewsJSON" })
+    </fieldset>
+
+    <fieldset>
+        @Html.LabelFor(m => m.Status, T("Status"))
+        @Html.TextBoxFor(m => m.Status, new { disabled = "true" })
+    </fieldset>
+</div>
+
+<div id="reviewHistory">
+    <fieldset>
+        <legend>Review History</legend>
+
+        <span data-bind="visible: reviews().length < 1">No reviews have taken place yet.</span>
+
+        <table class="reviewHistory items" data-bind="foreach: reviews">
+            <tr>
+                <td>
+                    <span data-bind="text: $index() + 1"></span>.
+                </td>
+                <td>
+                    <span data-bind="text: ReviewerName"></span>
+                    &nbsp;
+                    (<span data-bind="text: ReviewDate"></span>)
+                    &nbsp;-->&nbsp;
+                    <span data-bind="text: ReviewDecision"></span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <label>Raw Data</label>
+        <span data-bind="text: reviewsJSON"></span>
+        @Html.HiddenFor(m => m.ReviewHistoryData, new { data_bind = "value: reviewsJSON" })
+    </fieldset>
+</div>
 
 @using (Script.Foot())
 {
     Script.Include("http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js");
-    Script.Include("knockout-sortable.min.js");    
+    Script.Include("knockout-sortable.min.js");
     Script.Include("reviewPartEdit.js");
     
     <script type="text/javascript">
-        var approvalChain = JSON.parse('@Model.ApprovalChainData'.replace(/&quot;/g, '"'));
-        var availableStatuses = JSON.parse('@Model.AvailableStatuses'.replace(/&quot;/g, '"'));
-        var viewModel = new approvalChainViewModel(approvalChain, availableStatuses);
-        
-        ko.applyBindings(viewModel);
+        var regx = /&quot;/g,
+            replace = '"',
+            defaultStatus = '@Model.DefaultStatus',
+            pendingReviews = JSON.parse('@Model.PendingReviewsData'.replace(regx, replace)),
+            reviewHistory = JSON.parse('@Model.ReviewHistoryData'.replace(regx, replace)),
+            availableStatuses = JSON.parse('@Model.AvailableStatuses'.replace(regx, replace)),
+            pendingViewModel = new reviewsViewModel(pendingReviews, availableStatuses, defaultStatus),
+            historyViewModel = new reviewsViewModel(reviewHistory, availableStatuses, defaultStatus);
+
+        ko.applyBindings(pendingViewModel, document.getElementById("pendingReviews"));
+        ko.applyBindings(historyViewModel, document.getElementById("reviewHistory"));
     </script>
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace CSM.Form100.Models
+namespace CSM.Form100
 {
     public enum ActionCategory
     {

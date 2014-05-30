@@ -16,7 +16,7 @@ namespace CSM.Form100.Services
 
         JobStepRecord CreateJobStep(JobStepRecord jobStep);
         
-        JobStepRecord UpdateJobStep(JobStepRecordViewModel viewModel);
+        JobStepRecord UpdateJobStep(JobStepRecordViewModel viewModel, string employeeIdentifier);
 
         JobStepRecord UpdateJobStep(JobStepRecord jobStep);
     }

@@ -7,13 +7,13 @@ namespace CSM.Form100.Services
     public interface IReviewService : IDependency
     {
         ReviewPartViewModel GetReviewViewModel(ReviewPart part);
-
+        
         void UpdateReview(ReviewPartViewModel viewModel, ReviewPart part);
+        
+        ReviewStepRecord GetReviewStep(int id);
 
-        ReviewDecisionRecord GetReviewDecision(int id);
+        ReviewStepRecord CreateReviewStep(ReviewStepRecord decision);
 
-        ReviewDecisionRecord CreateReviewDecision(ReviewDecisionRecord decision);
-
-        ReviewDecisionRecord UpdateReviewDecision(ReviewDecisionRecord decision);
+        ReviewStepRecord UpdateReviewStep(ReviewStepRecord decision);
     }
 }

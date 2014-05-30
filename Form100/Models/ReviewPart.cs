@@ -6,12 +6,19 @@ namespace CSM.Form100.Models
 {
     public class ReviewPart : ContentPart<ReviewPartRecord>
     {
-        internal readonly LazyField<Queue<ReviewDecisionRecord>> ApprovalChainField = new LazyField<Queue<ReviewDecisionRecord>>();
-        
-        public Queue<ReviewDecisionRecord> ApprovalChain
+        internal readonly LazyField<Queue<ReviewStepRecord>> PendingReviewsField = new LazyField<Queue<ReviewStepRecord>>();
+        internal readonly LazyField<Stack<ReviewStepRecord>> ReviewHistoryField = new LazyField<Stack<ReviewStepRecord>>();
+
+        public Queue<ReviewStepRecord> PendingReviews
         {
-            get { return ApprovalChainField.Value; }
-            set { ApprovalChainField.Value = value; }
+            get { return PendingReviewsField.Value; }
+            set { PendingReviewsField.Value = value; }
+        }
+
+        public Stack<ReviewStepRecord> ReviewHistory
+        {
+            get { return ReviewHistoryField.Value; }
+            set { ReviewHistoryField.Value = value; }
         }
 
         public WorkflowStatus Status

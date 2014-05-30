@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CSM.Form100.Models;
 using CSM.Form100.ViewModels;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
@@ -11,90 +11,86 @@ namespace CSM.Form100.Services
 {
     public class ReviewService : IReviewService
     {
-        private readonly IRepository<ReviewDecisionRecord> reviewDecisionRepository;
-        
-        public ReviewService(IRepository<ReviewDecisionRecord> reviewDecisionRepository)
-        {
-            this.reviewDecisionRepository = reviewDecisionRepository;
-        }
+        private readonly IRepository<ReviewStepRecord> reviewStepRepository;
 
+        public ReviewService(IRepository<ReviewStepRecord> reviewStepRepository)
+        {
+            this.reviewStepRepository = reviewStepRepository;
+        }
+        
         public ReviewPartViewModel GetReviewViewModel(ReviewPart part)
         {
-            var viewModel = new ReviewPartViewModel();
-
-            if (part.ApprovalChain != null)
-            {
-                viewModel.ApprovalChainData = serializeApprovalChain(part.ApprovalChain);
-            }
-
-            viewModel.Status = part.Status;
+            var viewModel = new ReviewPartViewModel() {
+                Status = part.Status,
+                PendingReviewsData = serializeReviewSteps(part.PendingReviews),
+                ReviewHistoryData = serializeReviewSteps(part.ReviewHistory)
+            };
 
             return viewModel;
         }
-
+        
         public void UpdateReview(ReviewPartViewModel viewModel, ReviewPart part)
         {
-            part.Status = viewModel.Status;
-            var deserializedApprovalChain = new Queue<ReviewDecisionRecord>();
+            var identityPart = part.As<IdentityPart>();
+            string identity = identityPart.Identifier ?? part.Id.ToString();
 
-            if (!String.IsNullOrEmpty(viewModel.ApprovalChainData))
-            {
-                var identityPart = part.As<IdentityPart>();
-                deserializedApprovalChain = new Queue<ReviewDecisionRecord>(deserializeApprovalChain(viewModel.ApprovalChainData, identityPart.Identifier ?? part.Id.ToString()));
-            }
-
-            part.ApprovalChain = deserializedApprovalChain;
-        }
-
-        public ReviewDecisionRecord GetReviewDecision(int id)
-        {
-            var approval = reviewDecisionRepository.Get(id);
-
-            return approval;
-        }
-
-        public ReviewDecisionRecord CreateReviewDecision(ReviewDecisionRecord decision)
-        {
-            reviewDecisionRepository.Create(decision);
-
-            return decision;
+            part.Status = viewModel.Status;                        
+            part.PendingReviews = deserializePendingReviews(viewModel.PendingReviewsData, identity);
+            part.ReviewHistory = deserializeReviewHistory(viewModel.ReviewHistoryData, identity);
         }
         
-        public ReviewDecisionRecord UpdateReviewDecision(ReviewDecisionRecord decision)
+        public ReviewStepRecord GetReviewStep(int id)
         {
-            reviewDecisionRepository.Update(decision);
-
-            return decision;
+            var reviewStep = reviewStepRepository.Get(id);
+            return reviewStep;
         }
 
-        internal Queue<ReviewDecisionRecord> deserializeApprovalChain(string approvalChainData, string reviewPartId)
+        public ReviewStepRecord CreateReviewStep(ReviewStepRecord reviewStep)
         {
-            var approvalChain = new Queue<ReviewDecisionRecord>();
-            var reviewersData = JsonConvert.DeserializeObject<IEnumerable<ReviewDecisionRecord>>(approvalChainData);
+            reviewStepRepository.Create(reviewStep);
+            return reviewStep;
+        }
+        
+        public ReviewStepRecord UpdateReviewStep(ReviewStepRecord reviewStep)
+        {
+            reviewStepRepository.Update(reviewStep);
+            return reviewStep;
+        }
 
-            foreach(var reviewerData in reviewersData)
+        internal IEnumerable<ReviewStepRecord> deserializeReviewSteps(string reviewStepData, string reviewPartId)
+        {
+            var reviewSteps = JsonConvert.DeserializeObject<IEnumerable<ReviewStepRecord>>(reviewStepData);
+            List<ReviewStepRecord> processedReviewSteps = new List<ReviewStepRecord>();
+
+            foreach (var reviewStep in reviewSteps)
             {
-                var reviewDecision = new ReviewDecisionRecord() {
-                    Id =  reviewerData.Id,
-                    ReviewPartIdentifier = reviewPartId,
-                    TargetStatus = reviewerData.TargetStatus,
-                    ReviewDate = reviewerData.ReviewDate,
-                    ReviewerName = reviewerData.ReviewerName,
-                    ReviewerEmail = reviewerData.ReviewerEmail
-                };
-                
-                reviewDecision = reviewDecision.Id > 0 ? UpdateReviewDecision(reviewDecision) : CreateReviewDecision(reviewDecision);
-                
-                approvalChain.Enqueue(reviewDecision);
+                reviewStep.ReviewPartIdentifier = reviewPartId;
+
+                if (reviewStep.Id > 0)
+                    processedReviewSteps.Add(UpdateReviewStep(reviewStep));
+                else
+                    processedReviewSteps.Add(CreateReviewStep(reviewStep));
             }
 
-            return approvalChain;
+            return processedReviewSteps;
         }
 
-        internal string serializeApprovalChain(Queue<ReviewDecisionRecord> approvalChain)
+        internal Queue<ReviewStepRecord> deserializePendingReviews(string pendingReviewData, string reviewPartId)
         {
-            var json = JsonConvert.SerializeObject(approvalChain.ToArray());
-            return json;
+            var pendingReviews = deserializeReviewSteps(pendingReviewData ?? "[]", reviewPartId);
+            return new Queue<ReviewStepRecord>(pendingReviews);
+        }
+
+        internal Stack<ReviewStepRecord> deserializeReviewHistory(string reviewHistoryData, string reviewPartId)
+        {
+            var reviewHistory = deserializeReviewSteps(reviewHistoryData ?? "[]", reviewPartId);
+            return new Stack<ReviewStepRecord>(reviewHistory);
+        }
+
+        internal string serializeReviewSteps(IEnumerable<ReviewStepRecord> reviewSteps)
+        {
+            reviewSteps = reviewSteps ?? new List<ReviewStepRecord>();
+            return JsonConvert.SerializeObject(reviewSteps, new StringEnumConverter());
         }
     }
 }

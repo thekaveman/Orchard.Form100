@@ -1,8 +1,10 @@
-﻿table.items.approvalChain { margin-top: 1em; }
+﻿table.items.pendingReviews { margin-top: 1em; }
 
-table.approvalChain td:first-of-type { width: 5%; }
-table.approvalChain td:nth-of-type(2) { width: 25%; }
+table.pendingReviews td:first-of-type,
+table.reviewHistory td:first-of-type { width: 5%; }
+
+table.pendingReviews td:nth-of-type(2) { width: 35%; }
 
 @media screen and (min-width: 1300px) {
-    table.approvalChain td:nth-of-type(2) { width: 15%; }
+    table.pendingReviews td:nth-of-type(2) { width: 20%; }
 }

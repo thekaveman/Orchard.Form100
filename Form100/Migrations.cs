@@ -37,7 +37,8 @@ namespace CSM.Form100
                 typeof(ReviewPartRecord).Name,
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("ApprovalChainIds", col => col.Unlimited())
+                    .Column<string>("PendingReviewsIds")
+                    .Column<string>("ReviewHistoryIds")
                     .Column<string>("Status")
             );
 
@@ -47,6 +48,7 @@ namespace CSM.Form100
                 typeof(JobStepRecord).Name,
                 table => table
 				    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<string>("EmployeePartIdentifier")
                     .Column<string>("Title")
                     .Column<string>("DepartmentName")
                     .Column<string>("DivisionName")
@@ -57,11 +59,13 @@ namespace CSM.Form100
 			);
 
 			SchemaBuilder.CreateTable(
-                typeof(ReviewDecisionRecord).Name,
+                typeof(ReviewStepRecord).Name,
                 table => table
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
                     .Column<string>("ReviewPartIdentifier", col => col.Nullable())
-                    .Column<string>("TargetStatus")
+                    .Column<string>("ApprovingStatus")
+                    .Column<string>("RejectingStatus")
+                    .Column<string>("ReviewDecision")
                     .Column<DateTime>("ReviewDate", col => col.Nullable())
                     .Column<string>("ReviewerName")
                     .Column<string>("ReviewerEmail")

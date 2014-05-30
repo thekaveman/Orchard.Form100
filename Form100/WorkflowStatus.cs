@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CSM.Form100.Models
+namespace CSM.Form100
 {
     public enum WorkflowStatus
     {
@@ -9,15 +9,12 @@ namespace CSM.Form100.Models
 
         [Description("New")]
         New,
-        
+
         [Description("In Progress")]
         InProgress,
 
         [Description("Submitted")]
         Submitted,
-
-        [Description("Pending")]
-        Pending,
 
         [Description("Approved")]
         Approved,

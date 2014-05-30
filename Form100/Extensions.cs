@@ -20,11 +20,18 @@ namespace CSM.Form100
         }
     }
 
-    public static class QueueExtensions
+    public static class CollectionExtensions
     {
         public static Queue<T> Copy<T>(this Queue<T> source)
         {
             Queue<T> copy = new Queue<T>(source);
+
+            return copy;
+        }
+
+        public static Stack<T> Copy<T>(this Stack<T> source)
+        {
+            Stack<T> copy = new Stack<T>(source);
 
             return copy;
         }

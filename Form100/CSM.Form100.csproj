@@ -57,7 +57,16 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetwebapi\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -82,10 +91,11 @@
     <Content Include="Module.txt" />
     <Content Include="Views\EditorTemplates\Parts\Action.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="Activities\StatusDecisionActivity.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Drivers\ActionPartDriver.cs" />
     <Compile Include="Drivers\EmployeePartDriver.cs" />
     <Compile Include="Extensions.cs" />
@@ -96,14 +106,15 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
-    <Compile Include="Models\ActionCategory.cs" />
-    <Compile Include="Models\ReviewDecisionRecord.cs" />
+    <Compile Include="ActionCategory.cs" />
+    <Compile Include="Models\ReviewStepRecord.cs" />
     <Compile Include="Models\EmployeePart.cs" />
     <Compile Include="Models\EmployeePartRecord.cs" />
     <Compile Include="Models\JobStepRecord.cs" />
     <Compile Include="Models\ReviewPart.cs" />
     <Compile Include="Models\ReviewPartRecord.cs" />
-    <Compile Include="Models\WorkflowStatus.cs" />
+    <Compile Include="Tokens\EmployeePartTokens.cs" />
+    <Compile Include="WorkflowStatus.cs" />
     <Compile Include="Services\ActionService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\FormatProvider.cs" />
@@ -111,6 +122,7 @@
     <Compile Include="Services\IEmployeeService.cs" />
     <Compile Include="Services\ReviewService.cs" />
     <Compile Include="Services\IReviewService.cs" />
+    <Compile Include="Tokens\ReviewPartTokens.cs" />
     <Compile Include="ViewModels\ActionPartViewModel.cs" />
     <Compile Include="ViewModels\EmployeePartViewModel.cs" />
     <Compile Include="ViewModels\JobStepRecordViewModel.cs" />
@@ -124,6 +136,18 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
+      <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
+      <Name>Orchard.Workflows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

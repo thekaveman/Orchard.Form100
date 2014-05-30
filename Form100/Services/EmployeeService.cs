@@ -3,6 +3,7 @@ using CSM.Form100.Models;
 using CSM.Form100.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Core.Common.Models;
 
 namespace CSM.Form100.Services
 {
@@ -51,10 +52,12 @@ namespace CSM.Form100.Services
 
             part.FirstName = viewModel.FirstName;
             part.LastName = viewModel.LastName;
-            
-            part.CurrentJobStep = UpdateJobStep(viewModel.CurrentJobStep);
-            
-            part.PriorJobStep = UpdateJobStep(viewModel.PriorJobStep);
+
+            string employeeIdentifier = part.As<IdentityPart>().Identifier;
+
+            part.CurrentJobStep = UpdateJobStep(viewModel.CurrentJobStep, employeeIdentifier);
+
+            part.PriorJobStep = UpdateJobStep(viewModel.PriorJobStep, employeeIdentifier);
             
         }
 
@@ -98,42 +101,48 @@ namespace CSM.Form100.Services
             return jobStep;
         }
 
-        public JobStepRecord UpdateJobStep(JobStepRecordViewModel viewModel)
+        public JobStepRecord UpdateJobStep(JobStepRecordViewModel viewModel, string employeePartIdentifier)
         {
-            var jobStep = GetJobStep(viewModel.Id) ?? new JobStepRecord();
+            if (viewModel != null)
+            {
+                JobStepRecord jobStep = GetJobStep(viewModel.Id) ?? new JobStepRecord();
 
-            jobStep.Title = viewModel.Title;
-            jobStep.DepartmentName = viewModel.DepartmentName;
-            jobStep.DivisionName = viewModel.DivisionName;
+                jobStep.EmployeePartIdentifier = employeePartIdentifier;
+                jobStep.Title = viewModel.Title;
+                jobStep.DepartmentName = viewModel.DepartmentName;
+                jobStep.DivisionName = viewModel.DivisionName;
 
-            int intVal;
+                int intVal;
 
-            if (int.TryParse(viewModel.DivisionNumber, out intVal))
-                jobStep.DivisionNumber = intVal;
-            else
-                throw new InvalidOperationException("Couldn't parse JobStep DivisionNumber to int from editor template.");
+                if (int.TryParse(viewModel.DivisionNumber, out intVal))
+                    jobStep.DivisionNumber = intVal;
+                else
+                    throw new InvalidOperationException("Couldn't parse JobStep DivisionNumber to int from editor template.");
 
-            if (int.TryParse(viewModel.StepNumber, out intVal))
-                jobStep.StepNumber = intVal;
-            else
-                throw new InvalidOperationException("Couldn't parse JobStep StepNumber to int from editor template.");
+                if (int.TryParse(viewModel.StepNumber, out intVal))
+                    jobStep.StepNumber = intVal;
+                else
+                    throw new InvalidOperationException("Couldn't parse JobStep StepNumber to int from editor template.");
 
-            if (int.TryParse(viewModel.HoursPerWeek, out intVal))
-                jobStep.HoursPerWeek = intVal;
-            else
-                throw new InvalidOperationException("Couldn't parse JobStep HoursPerWeek to int from editor template.");
+                if (int.TryParse(viewModel.HoursPerWeek, out intVal))
+                    jobStep.HoursPerWeek = intVal;
+                else
+                    throw new InvalidOperationException("Couldn't parse JobStep HoursPerWeek to int from editor template.");
 
-            decimal hourlyRate;
+                decimal hourlyRate;
 
-            if (decimal.TryParse(viewModel.HourlyRate, out hourlyRate))
-                jobStep.HourlyRate = hourlyRate;
-            else
-                throw new InvalidOperationException("Couldn't parse JobStep HourlyRate to decimal from editor template.");
+                if (decimal.TryParse(viewModel.HourlyRate, out hourlyRate))
+                    jobStep.HourlyRate = hourlyRate;
+                else
+                    throw new InvalidOperationException("Couldn't parse JobStep HourlyRate to decimal from editor template.");
 
-            if (jobStep.Id > 0)
-                return UpdateJobStep(jobStep);
-            else
-                return CreateJobStep(jobStep);
+                if (jobStep.Id > 0)
+                    return UpdateJobStep(jobStep);
+                else
+                    return CreateJobStep(jobStep);
+            }
+
+            return null;
         }
     }
 }

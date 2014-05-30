@@ -80,19 +80,32 @@ namespace CSM.Form100.Drivers
 
             reviewNode.SetAttributeValue("Status", part.Status);
 
-            if (part.ApprovalChain != null && part.ApprovalChain.Any())
+            if (part.PendingReviews != null && part.PendingReviews.Any())
             {
-                var approvalChainNode = new XElement("ApprovalChain");
-                var copy = part.ApprovalChain.Copy();
+                var pendingReviewsNode = new XElement("PendingReviews");
+                var copy = part.PendingReviews.Copy();
                 
                 while (copy.Any())
                 {
-                    var decisionRecord = copy.Dequeue();
-                    var decisionRecordNode = createReviewDecisionNode(decisionRecord);
-                    approvalChainNode.Add(decisionRecordNode);
+                    var reviewStepNode = createReviewStepNode(copy.Dequeue());
+                    pendingReviewsNode.Add(reviewStepNode);
                 }
 
-                reviewNode.Add(approvalChainNode);
+                reviewNode.Add(pendingReviewsNode);
+            }
+
+            if (part.ReviewHistory != null && part.ReviewHistory.Any())
+            {
+                var reviewHistoryNode = new XElement("ReviewHistory");
+                var copy = part.ReviewHistory.Copy();
+
+                while (copy.Any())
+                {
+                    var reviewStepNode = createReviewStepNode(copy.Pop());
+                    reviewHistoryNode.Add(reviewStepNode);
+                }
+
+                reviewNode.Add(reviewHistoryNode);
             }
         }
 
@@ -114,60 +127,85 @@ namespace CSM.Form100.Drivers
                     throw new InvalidOperationException("Couldn't parse Status attribute to WorkflowStatus enum.");
             });
 
-            var approvalChain = new Queue<ReviewDecisionRecord>();
+            var pendingReviews = new Queue<ReviewStepRecord>();
 
-            var approvalChainNode = reviewNode.Element("ApprovalChain");
+            var pendingReviewsNode = reviewNode.Element("PendingReviews");
 
-            if (approvalChainNode != null && approvalChainNode.Elements("ReviewDecision").Any())
+            if (pendingReviewsNode != null && pendingReviewsNode.Elements("ReviewStep").Any())
             {
-                foreach (var reviewDecisionNode in approvalChainNode.Elements("ReviewDecision"))
+                foreach (var reviewStepNode in pendingReviewsNode.Elements("ReviewStep"))
                 {
-                    var decision = parseReviewDecisionNode(reviewDecisionNode);
-                    approvalChain.Enqueue(reviewService.CreateReviewDecision(decision));
+                    var reviewStep = parseReviewStepNode(reviewStepNode);
+                    pendingReviews.Enqueue(reviewService.CreateReviewStep(reviewStep));
                 }
             }
 
-            part.ApprovalChain = approvalChain;
+            part.PendingReviews = pendingReviews;
+
+            var reviewHistory = new Stack<ReviewStepRecord>();
+
+            var reviewHistoryNode = reviewNode.Element("ReviewHistory");
+
+            if (reviewHistoryNode != null && reviewHistoryNode.Elements("ReviewStep").Any())
+            {
+                foreach (var reviewStepNode in reviewHistoryNode.Elements("ReviewStep"))
+                {
+                    var reviewStep = parseReviewStepNode(reviewStepNode);
+                    reviewHistory.Push(reviewService.CreateReviewStep(reviewStep));
+                }
+            }
+
+            part.ReviewHistory = reviewHistory;
         }
 
-        private XElement createReviewDecisionNode(ReviewDecisionRecord reviewDecision)
+        private XElement createReviewStepNode(ReviewStepRecord reviewStep)
         {
-            var reviewDecisionNode = new XElement("ReviewDecision");
+            var reviewStepNode = new XElement("ReviewStep");
 
-            reviewDecisionNode.SetAttributeValue("ReviewPartIdentifier", reviewDecision.ReviewPartIdentifier);
-            reviewDecisionNode.SetAttributeValue("TargetStatus", reviewDecision.TargetStatus);
-            reviewDecisionNode.SetAttributeValue("ReviewDate", reviewDecision.ReviewDate.HasValue ? reviewDecision.ReviewDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
-            reviewDecisionNode.SetAttributeValue("ReviewerName", reviewDecision.ReviewerName);
-            reviewDecisionNode.SetAttributeValue("ReviewerEmail", reviewDecision.ReviewerEmail);
+            reviewStepNode.SetAttributeValue("ReviewPartIdentifier", reviewStep.ReviewPartIdentifier);
+            reviewStepNode.SetAttributeValue("ApprovingStatus", reviewStep.ApprovingStatus);
+            reviewStepNode.SetAttributeValue("RejectingStatus", reviewStep.RejectingStatus);
+            reviewStepNode.SetAttributeValue("ReviewDate", reviewStep.ReviewDate.HasValue ? reviewStep.ReviewDate.Value.ToString(FormatProvider.DateFormat) : String.Empty);
+            reviewStepNode.SetAttributeValue("ReviewDecision", reviewStep.ReviewDecision);
+            reviewStepNode.SetAttributeValue("ReviewerName", reviewStep.ReviewerName);
+            reviewStepNode.SetAttributeValue("ReviewerEmail", reviewStep.ReviewerEmail);
 
-            return reviewDecisionNode;
+            return reviewStepNode;
         }
 
-        private ReviewDecisionRecord parseReviewDecisionNode(XElement reviewDecisionNode)
+        private ReviewStepRecord parseReviewStepNode(XElement reviewStepNode)
         {
-            ReviewDecisionRecord reviewDecision = new ReviewDecisionRecord();
+            ReviewStepRecord reviewStep = new ReviewStepRecord() {
+                ReviewPartIdentifier = reviewStepNode.SafeGetAttribute("ReviewPartIdentifier"),
+                ReviewerName = reviewStepNode.SafeGetAttribute("ReviewerName"),
+                ReviewerEmail = reviewStepNode.SafeGetAttribute("ReviewerEmail")
+            };
             
-            reviewDecision.ReviewPartIdentifier = reviewDecisionNode.SafeGetAttribute("ReviewPartIdentifier");
+            WorkflowStatus status;
 
-            WorkflowStatus targetStatus;
-
-            if (Enum.TryParse(reviewDecisionNode.SafeGetAttribute("TargetStatus"), out targetStatus))
-                reviewDecision.TargetStatus = targetStatus;
+            if (Enum.TryParse(reviewStepNode.SafeGetAttribute("ApprovingStatus"), out status))
+                reviewStep.ApprovingStatus = status;
             else
-                reviewDecision.TargetStatus = WorkflowStatus.Undefined;
+                reviewStep.ApprovingStatus = WorkflowStatus.Undefined;
+
+            if (Enum.TryParse(reviewStepNode.SafeGetAttribute("RejectingStatus"), out status))
+                reviewStep.RejectingStatus = status;
+            else
+                reviewStep.RejectingStatus = WorkflowStatus.Undefined;
+
+            if (Enum.TryParse(reviewStepNode.SafeGetAttribute("ReviewDecision"), out status))
+                reviewStep.ReviewDecision = status;
+            else
+                reviewStep.ReviewDecision = WorkflowStatus.Undefined;
 
             DateTime reviewDate;
 
-            if (DateTime.TryParse(reviewDecisionNode.SafeGetAttribute("ReviewDate"), out reviewDate))
-                reviewDecision.ReviewDate = reviewDate;
+            if (DateTime.TryParse(reviewStepNode.SafeGetAttribute("ReviewDate"), out reviewDate))
+                reviewStep.ReviewDate = reviewDate;
             else
-                reviewDecision.ReviewDate = null;
+                reviewStep.ReviewDate = null;
 
-            reviewDecision.ReviewerName = reviewDecisionNode.SafeGetAttribute("ReviewerName");
-
-            reviewDecision.ReviewerEmail = reviewDecisionNode.SafeGetAttribute("ReviewerEmail");
-
-            return reviewDecision;
+            return reviewStep;
         }
     }
 }
