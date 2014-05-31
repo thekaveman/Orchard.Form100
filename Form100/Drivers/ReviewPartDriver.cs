@@ -10,6 +10,9 @@ using Orchard.ContentManagement.Handlers;
 
 namespace CSM.Form100.Drivers
 {
+    /// <summary>
+    /// ContentPartDrivers are mini-Controllers that work at the ContentPart level
+    /// </summary>
     public class ReviewPartDriver : ContentPartDriver<ReviewPart>
     {
         private readonly IReviewService reviewService;
@@ -19,6 +22,9 @@ namespace CSM.Form100.Drivers
             this.reviewService = reviewService;
         }
 
+        /// <summary>
+        /// Needed for HTML input id uniqueness
+        /// </summary>
         protected override string Prefix
         {
             get { return "CSM_Form100_ReviewPart"; }
@@ -82,7 +88,7 @@ namespace CSM.Form100.Drivers
             if (part.PendingReviews != null && part.PendingReviews.Any())
             {
                 var pendingReviewsNode = new XElement("PendingReviews");
-                var clone = part.PendingReviews.Clone();
+                var clone = part.PendingReviews.WeakClone();
                 
                 while (clone.Any())
                 {
@@ -96,7 +102,7 @@ namespace CSM.Form100.Drivers
             if (part.ReviewHistory != null && part.ReviewHistory.Any())
             {
                 var reviewHistoryNode = new XElement("ReviewHistory");
-                var clone = part.ReviewHistory.Clone();
+                var clone = part.ReviewHistory.WeakClone();
 
                 while (clone.Any())
                 {
@@ -135,9 +141,7 @@ namespace CSM.Form100.Drivers
                     part.PendingReviews.Add(reviewService.CreateReviewStep(reviewStep));
                 }
             }
-
-            part.Record.PendingReviewsIds = reviewService.SerializeReviewStepIds(part.PendingReviews);
-
+            
             var reviewHistoryNode = reviewNode.Element("ReviewHistory");
             if (reviewHistoryNode != null && reviewHistoryNode.Elements("ReviewStep").Any())
             {
@@ -147,8 +151,6 @@ namespace CSM.Form100.Drivers
                     part.ReviewHistory.Add(reviewService.CreateReviewStep(reviewStep));
                 }
             }
-
-            part.Record.ReviewHistoryIds = reviewService.SerializeReviewStepIds(part.ReviewHistory);
         }
 
         private XElement createReviewStepNode(ReviewStepRecord reviewStep)

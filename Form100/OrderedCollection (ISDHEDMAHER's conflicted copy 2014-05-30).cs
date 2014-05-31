@@ -9,7 +9,7 @@ namespace CSM.Form100
 
     public abstract class OrderedCollection<T> : IEnumerable<T>
     {
-        protected List<T> list { get; private set; }
+        protected List<T>  list  { get; private set; }
         protected Queue<T> queue { get; private set; }
         protected Stack<T> stack { get; private set; }
 

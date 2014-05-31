@@ -2,6 +2,9 @@
 
 namespace CSM.Form100
 {
+    /// <summary>
+    /// An marker for tracking state in a Workflow.
+    /// </summary>
     public enum WorkflowStatus
     {
         [Description("Undefined")]

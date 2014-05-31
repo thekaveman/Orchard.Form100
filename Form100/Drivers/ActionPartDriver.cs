@@ -8,7 +8,9 @@ using Orchard.ContentManagement.Handlers;
 
 namespace CSM.Form100.Drivers
 {
-    
+    /// <summary>
+    /// ContentPartDrivers are mini-Controllers that work at the ContentPart level
+    /// </summary>
     public class ActionPartDriver : ContentPartDriver<ActionPart>
     {
         private readonly IActionService actionService;
@@ -18,6 +20,9 @@ namespace CSM.Form100.Drivers
             this.actionService = actionService;
         }
 
+        /// <summary>
+        /// Needed for HTML input id uniqueness
+        /// </summary>
         protected override string Prefix
         {
             get { return "CSM_Form100_ActionPart"; }
@@ -62,7 +67,7 @@ namespace CSM.Form100.Drivers
 
             if (updater.TryUpdateModel(viewModel, Prefix, null, null))
             {
-                actionService.Update(viewModel, part);
+                actionService.UpdateAction(viewModel, part);
             }
 
             return Editor(part, shapeHelper);

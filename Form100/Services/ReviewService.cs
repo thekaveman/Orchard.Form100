@@ -60,16 +60,23 @@ namespace CSM.Form100.Services
             reviewStepRepository.Update(reviewStep);
             return reviewStep;
         }
-                
-        public string SerializeReviewStepIds(IEnumerable<ReviewStepRecord> reviewSteps)
+
+        public string SerializeReviewSteps<T>(IEnumerable<ReviewStepRecord> reviewSteps, Func<ReviewStepRecord, T> propertySelector, bool distinct = false)
         {
-            return String.Join(separator, reviewSteps.Select(r => r.Id));
+            var projectedValues = reviewSteps.Select(propertySelector);
+
+            if(distinct)
+                projectedValues = projectedValues.Distinct();
+
+            return String.Join(separator, projectedValues);
         }
 
         public IEnumerable<ReviewStepRecord> DeserializeReviewStepIds(string reviewStepIds)
         {
-            var reviewSteps = reviewStepIds.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
-                                           .Select(id => GetReviewStep(int.Parse(id)));
+            var reviewSteps = (reviewStepIds ?? "")
+                    .Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(id => GetReviewStep(int.Parse(id)))
+            ;
 
             return reviewSteps;
         }
@@ -101,7 +108,7 @@ namespace CSM.Form100.Services
         internal string getReviewStepIds(string reviewStepJSON, string reviewPartId)
         {
             var reviewSteps = getReviewSteps(reviewStepJSON ?? "[]", reviewPartId);
-            return SerializeReviewStepIds(reviewSteps);
+            return SerializeReviewSteps(reviewSteps, r => r.Id);
         }
     }
 }

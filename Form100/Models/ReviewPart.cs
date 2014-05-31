@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using CSM.Form100.Collections;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 
 namespace CSM.Form100.Models

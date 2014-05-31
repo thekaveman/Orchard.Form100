@@ -9,6 +9,9 @@ using Orchard.ContentManagement.Handlers;
 
 namespace CSM.Form100.Drivers
 {
+    /// <summary>
+    /// ContentPartDrivers are mini-Controllers that work at the ContentPart level
+    /// </summary>
     public class EmployeePartDriver : ContentPartDriver<EmployeePart>
     {
         private readonly IEmployeeService employeeService;
@@ -18,6 +21,9 @@ namespace CSM.Form100.Drivers
             this.employeeService = employeeService;
         }
 
+        /// <summary>
+        /// Needed for HTML input id uniqueness
+        /// </summary>
         protected override string Prefix
         {
             get { return "CSM_Form100_EmployeePart"; }

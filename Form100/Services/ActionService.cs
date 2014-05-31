@@ -27,7 +27,7 @@ namespace CSM.Form100.Services
             return target;
         }
 
-        public void Update(ActionPartViewModel viewModel, ActionPart part)
+        public void UpdateAction(ActionPartViewModel viewModel, ActionPart part)
         {
             DateTime effectiveDate;
 

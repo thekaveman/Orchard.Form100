@@ -95,8 +95,8 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Activities\StatusDecisionActivity.cs" />
-    <Compile Include="OrderedCollection.cs" />
-    <Compile Include="ReviewChain.cs" />
+    <Compile Include="Collections\OrderedCollection.cs" />
+    <Compile Include="Collections\ReviewChain.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Drivers\ActionPartDriver.cs" />

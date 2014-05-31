@@ -1,4 +1,5 @@
-﻿function reviewStep(name, email, approvingStatus, rejectingStatus, defaultStatus) {
+﻿//a simple object generator for a reviewStep
+function reviewStep(name, email, approvingStatus, rejectingStatus, defaultStatus) {
     return {
         Id: 0,
         ReviewPartIdentifier: "",
@@ -11,6 +12,7 @@
     };
 }
 
+//a knockout view model representing a review chain
 function reviewsViewModel(initChain, initStatuses, defaultStatus) {
     var self = this;
 
