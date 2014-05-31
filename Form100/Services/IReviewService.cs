@@ -1,4 +1,5 @@
-﻿using CSM.Form100.Models;
+﻿using System.Collections.Generic;
+using CSM.Form100.Models;
 using CSM.Form100.ViewModels;
 using Orchard;
 
@@ -15,5 +16,9 @@ namespace CSM.Form100.Services
         ReviewStepRecord CreateReviewStep(ReviewStepRecord decision);
 
         ReviewStepRecord UpdateReviewStep(ReviewStepRecord decision);
+       
+        string SerializeReviewStepIds(IEnumerable<ReviewStepRecord> reviewSteps);
+
+        IEnumerable<ReviewStepRecord> DeserializeReviewStepIds(string reviewStepIds);
     }
 }

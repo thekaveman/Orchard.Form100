@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using CSM.Form100.Models;
@@ -83,11 +82,11 @@ namespace CSM.Form100.Drivers
             if (part.PendingReviews != null && part.PendingReviews.Any())
             {
                 var pendingReviewsNode = new XElement("PendingReviews");
-                var copy = part.PendingReviews.Copy();
+                var clone = part.PendingReviews.Clone();
                 
-                while (copy.Any())
+                while (clone.Any())
                 {
-                    var reviewStepNode = createReviewStepNode(copy.Dequeue());
+                    var reviewStepNode = createReviewStepNode(clone.RemoveNext());
                     pendingReviewsNode.Add(reviewStepNode);
                 }
 
@@ -97,11 +96,11 @@ namespace CSM.Form100.Drivers
             if (part.ReviewHistory != null && part.ReviewHistory.Any())
             {
                 var reviewHistoryNode = new XElement("ReviewHistory");
-                var copy = part.ReviewHistory.Copy();
+                var clone = part.ReviewHistory.Clone();
 
-                while (copy.Any())
+                while (clone.Any())
                 {
-                    var reviewStepNode = createReviewStepNode(copy.Pop());
+                    var reviewStepNode = createReviewStepNode(clone.RemoveNext());
                     reviewHistoryNode.Add(reviewStepNode);
                 }
 
@@ -127,35 +126,29 @@ namespace CSM.Form100.Drivers
                     throw new InvalidOperationException("Couldn't parse Status attribute to WorkflowStatus enum.");
             });
 
-            var pendingReviews = new Queue<ReviewStepRecord>();
-
             var pendingReviewsNode = reviewNode.Element("PendingReviews");
-
             if (pendingReviewsNode != null && pendingReviewsNode.Elements("ReviewStep").Any())
             {
                 foreach (var reviewStepNode in pendingReviewsNode.Elements("ReviewStep"))
                 {
                     var reviewStep = parseReviewStepNode(reviewStepNode);
-                    pendingReviews.Enqueue(reviewService.CreateReviewStep(reviewStep));
+                    part.PendingReviews.Add(reviewService.CreateReviewStep(reviewStep));
                 }
             }
 
-            part.PendingReviews = pendingReviews;
-
-            var reviewHistory = new Stack<ReviewStepRecord>();
+            part.Record.PendingReviewsIds = reviewService.SerializeReviewStepIds(part.PendingReviews);
 
             var reviewHistoryNode = reviewNode.Element("ReviewHistory");
-
             if (reviewHistoryNode != null && reviewHistoryNode.Elements("ReviewStep").Any())
             {
                 foreach (var reviewStepNode in reviewHistoryNode.Elements("ReviewStep"))
                 {
                     var reviewStep = parseReviewStepNode(reviewStepNode);
-                    reviewHistory.Push(reviewService.CreateReviewStep(reviewStep));
+                    part.ReviewHistory.Add(reviewService.CreateReviewStep(reviewStep));
                 }
             }
 
-            part.ReviewHistory = reviewHistory;
+            part.Record.ReviewHistoryIds = reviewService.SerializeReviewStepIds(part.ReviewHistory);
         }
 
         private XElement createReviewStepNode(ReviewStepRecord reviewStep)

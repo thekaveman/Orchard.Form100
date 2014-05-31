@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using CSM.Form100.Models;
-using CSM.Form100.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Tokens;
@@ -26,6 +25,7 @@ namespace CSM.Form100.Tokens
                     .Token("Next.Email", T("Next.Email"), T("The email of the next reviewer in the chain."))
                     .Token("Next.Approving", T("Next.Accepting"), T("The approving status of the next reviewer in the chain."))
                     .Token("Next.Rejecting", T("Next.Rejecting"), T("The rejecting status of the next reviewer in the chain."))
+                    .Token("History.Emails", T("History.Emails"), T("The email addresses of each reviewer in the history."))
                     ;
         }
 
@@ -71,13 +71,19 @@ namespace CSM.Form100.Tokens
 
                         return WorkflowStatus.Undefined.ToString();
                     })
+                    .Token("History.Emails", reviewPart => {
+                        if (reviewPart != null && reviewPart.ReviewHistory != null)
+                            return String.Join(",", reviewPart.ReviewHistory.Select(r => r.ReviewerEmail).Distinct().OrderBy(s => s));
+
+                        return String.Empty;
+                    })
                     ;
         }
 
         private ReviewStepRecord nextReviewer(ReviewPart reviewPart)
         {
             if (reviewPart != null && reviewPart.PendingReviews != null && reviewPart.PendingReviews.Any())
-                return reviewPart.PendingReviews.Peek();
+                return reviewPart.PendingReviews.PeekNext();
 
             return null;
         }

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using CSM.Form100.Models;
 using CSM.Form100.Services;
 using Orchard.ContentManagement;
-using Orchard.Localization;
-using Orchard.Workflows.Services;
-using Orchard.Workflows.Activities;
 
 namespace CSM.Form100.Controllers
 {
@@ -53,7 +49,7 @@ namespace CSM.Form100.Controllers
 
             if (reviewPart.PendingReviews.Any())
             {
-                var nextStep = getNextStep(reviewPart);
+                var nextStep = reviewPart.PendingReviews.RemoveNext();
 
                 if (status == nextStep.ApprovingStatus || status == nextStep.RejectingStatus)
                 {
@@ -62,28 +58,12 @@ namespace CSM.Form100.Controllers
                     nextStep.ReviewDate = DateTime.Now;
                     nextStep.ReviewDecision = status;
                     nextStep = reviewService.Value.UpdateReviewStep(nextStep);
-                    
-                    completeStep(reviewPart, nextStep);
+
+                    reviewPart.ReviewHistory.Add(nextStep);
 
                     contentManager.Value.Publish(contentItem);
                 }
             }
-        }
-
-        private ReviewStepRecord getNextStep(ReviewPart reviewPart)
-        {
-            var nextStep = reviewPart.PendingReviews.Dequeue();
-
-            reviewPart.PendingReviews = reviewPart.PendingReviews.Copy();
-
-            return nextStep;
-        }
-
-        private void completeStep(ReviewPart reviewPart, ReviewStepRecord step)
-        {
-            reviewPart.ReviewHistory.Push(step);
-
-            reviewPart.ReviewHistory = reviewPart.ReviewHistory.Copy();
         }
     }
 }

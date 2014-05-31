@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CSM.Form100.Models;
 using CSM.Form100.ViewModels;
 using Newtonsoft.Json;
@@ -11,6 +13,8 @@ namespace CSM.Form100.Services
 {
     public class ReviewService : IReviewService
     {
+        private static readonly string separator = ",";
+
         private readonly IRepository<ReviewStepRecord> reviewStepRepository;
 
         public ReviewService(IRepository<ReviewStepRecord> reviewStepRepository)
@@ -22,8 +26,8 @@ namespace CSM.Form100.Services
         {
             var viewModel = new ReviewPartViewModel() {
                 Status = part.Status,
-                PendingReviewsData = serializeReviewSteps(part.PendingReviews),
-                ReviewHistoryData = serializeReviewSteps(part.ReviewHistory)
+                PendingReviewsData = getReviewStepsJSON(part.PendingReviews),
+                ReviewHistoryData = getReviewStepsJSON(part.ReviewHistory)
             };
 
             return viewModel;
@@ -34,9 +38,9 @@ namespace CSM.Form100.Services
             var identityPart = part.As<IdentityPart>();
             string identity = identityPart.Identifier ?? part.Id.ToString();
 
-            part.Status = viewModel.Status;                        
-            part.PendingReviews = deserializePendingReviews(viewModel.PendingReviewsData, identity);
-            part.ReviewHistory = deserializeReviewHistory(viewModel.ReviewHistoryData, identity);
+            part.Status = viewModel.Status;
+            part.Record.PendingReviewsIds = getReviewStepIds(viewModel.PendingReviewsData, identity);
+            part.Record.ReviewHistoryIds = getReviewStepIds(viewModel.ReviewHistoryData, identity);
         }
         
         public ReviewStepRecord GetReviewStep(int id)
@@ -56,10 +60,23 @@ namespace CSM.Form100.Services
             reviewStepRepository.Update(reviewStep);
             return reviewStep;
         }
-
-        internal IEnumerable<ReviewStepRecord> deserializeReviewSteps(string reviewStepData, string reviewPartId)
+                
+        public string SerializeReviewStepIds(IEnumerable<ReviewStepRecord> reviewSteps)
         {
-            var reviewSteps = JsonConvert.DeserializeObject<IEnumerable<ReviewStepRecord>>(reviewStepData);
+            return String.Join(separator, reviewSteps.Select(r => r.Id));
+        }
+
+        public IEnumerable<ReviewStepRecord> DeserializeReviewStepIds(string reviewStepIds)
+        {
+            var reviewSteps = reviewStepIds.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
+                                           .Select(id => GetReviewStep(int.Parse(id)));
+
+            return reviewSteps;
+        }
+
+        internal IEnumerable<ReviewStepRecord> getReviewSteps(string reviewStepJSON, string reviewPartId)
+        {
+            var reviewSteps = JsonConvert.DeserializeObject<IEnumerable<ReviewStepRecord>>(reviewStepJSON);
             List<ReviewStepRecord> processedReviewSteps = new List<ReviewStepRecord>();
 
             foreach (var reviewStep in reviewSteps)
@@ -75,22 +92,16 @@ namespace CSM.Form100.Services
             return processedReviewSteps;
         }
 
-        internal Queue<ReviewStepRecord> deserializePendingReviews(string pendingReviewData, string reviewPartId)
-        {
-            var pendingReviews = deserializeReviewSteps(pendingReviewData ?? "[]", reviewPartId);
-            return new Queue<ReviewStepRecord>(pendingReviews);
-        }
-
-        internal Stack<ReviewStepRecord> deserializeReviewHistory(string reviewHistoryData, string reviewPartId)
-        {
-            var reviewHistory = deserializeReviewSteps(reviewHistoryData ?? "[]", reviewPartId);
-            return new Stack<ReviewStepRecord>(reviewHistory);
-        }
-
-        internal string serializeReviewSteps(IEnumerable<ReviewStepRecord> reviewSteps)
+        internal string getReviewStepsJSON(IEnumerable<ReviewStepRecord> reviewSteps)
         {
             reviewSteps = reviewSteps ?? new List<ReviewStepRecord>();
             return JsonConvert.SerializeObject(reviewSteps, new StringEnumConverter());
+        }
+
+        internal string getReviewStepIds(string reviewStepJSON, string reviewPartId)
+        {
+            var reviewSteps = getReviewSteps(reviewStepJSON ?? "[]", reviewPartId);
+            return SerializeReviewStepIds(reviewSteps);
         }
     }
 }
