@@ -82,6 +82,7 @@
   <ItemGroup>
     <Content Include="Placement.info" />
     <Content Include="pseudocode.txt" />
+    <Content Include="Recipes\Form100.recipe.xml" />
     <Content Include="Scripts\knockout-sortable.min.js" />
     <Content Include="Scripts\reviewPartEdit.js" />
     <Content Include="Styles\reviewPartEdit.css" />
