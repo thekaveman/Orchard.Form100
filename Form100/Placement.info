@@ -5,5 +5,8 @@
   <Place Parts_Action_Edit="Content:0.0"
          Parts_Employee_Edit="Content:0.1"
          Parts_Review_Edit="Content:0.2" />
-    
+
+  <Place Fields_WorkflowStatus_Edit="Content:2.7"/>
+  <Place Fields_WorkflowStatus="Content:after"/>
+
 </Placement>

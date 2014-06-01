@@ -93,11 +93,15 @@
     <Content Include="Module.txt" />
     <Content Include="Views\EditorTemplates\Parts\Action.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\WorkflowStatusFieldSettings.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\StatusDecisionActivity.cs" />
     <Compile Include="Collections\OrderedCollection.cs" />
     <Compile Include="Collections\ReviewChain.cs" />
+    <Compile Include="Drivers\WorkflowStatusFieldDriver.cs" />
+    <Compile Include="Fields\WorkflowStatusField.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Drivers\ActionPartDriver.cs" />
@@ -117,6 +121,8 @@
     <Compile Include="Models\JobStepRecord.cs" />
     <Compile Include="Models\ReviewPart.cs" />
     <Compile Include="Models\ReviewPartRecord.cs" />
+    <Compile Include="Settings\WorkflowStatusFieldEditorEvents.cs" />
+    <Compile Include="Settings\WorkflowStatusFieldSettings.cs" />
     <Compile Include="Tokens\EmployeePartTokens.cs" />
     <Compile Include="WorkflowStatus.cs" />
     <Compile Include="Services\ActionService.cs" />
@@ -161,6 +167,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\JobStepRecordViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\WorkflowStatus.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\WorkflowStatus.Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

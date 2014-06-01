@@ -1,0 +1,12 @@
+﻿@using CSM.Form100;
+@using Orchard.Utility.Extensions;
+
+@{
+    WorkflowStatus status = Model.ContentField.Value;
+    string name = Model.ContentField.DisplayName;
+
+    <p class="enumeration-field enumeration-field-@name.HtmlClassify()">
+        <span class="name">@name:</span>
+        <span class="value">@status</span>
+    </p>
+}

@@ -1,0 +1,31 @@
+﻿@model CSM.Form100.Settings.EnumerationFieldSettings
+@using CSM.Form100.Settings;
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("An option is required")</label>
+        <span class="hint">@T("Check to ensure the user is providing an option for this field.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Disabled) <label for="@Html.FieldIdFor(m => m.Disabled)" class="forcheckbox">@T("The field is disabled from the UI")</label>
+        <span class="hint">@T("Check to prevent a user from editing this field from the UI.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label class="forpicker" for="@Html.FieldIdFor(m => m.ListMode)">@T("List mode")</label>    
+    <select id="@Html.FieldIdFor(m => m.ListMode)" name="@Html.FieldNameFor(m => m.ListMode)">
+        @Html.SelectOption(ListMode.Dropdown, Model.ListMode == ListMode.Dropdown, T("Dropdown list").ToString())
+        @Html.SelectOption(ListMode.Radiobutton, Model.ListMode == ListMode.Radiobutton, T("Radio button list").ToString())
+    </select> 
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+    <span class="hint">@T("The help text is written under the field when users are selecting an option.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>
