@@ -12,26 +12,26 @@ namespace CSM.Form100
         {
             // creating tables for part record classes
 
-            //SchemaBuilder.CreateTable(
-            //    typeof(ActionPartRecord).Name,
-            //    table => table
-            //        .ContentPartRecord()
-            //        .Column<DateTime>("EffectiveDate", col => col.Nullable())
-            //        .Column<string>("Category")
-            //        .Column<string>("Type")
-            //        .Column<string>("Detail")
-            //);
+            SchemaBuilder.CreateTable(
+                typeof(ActionPartRecord).Name,
+                table => table
+                    .ContentPartRecord()
+                    .Column<DateTime>("EffectiveDate", col => col.Nullable())
+                    .Column<string>("Category")
+                    .Column<string>("Type")
+                    .Column<string>("Detail")
+            );
 
-            //SchemaBuilder.CreateTable(
-            //    typeof(EmployeePartRecord).Name,
-            //    table => table
-            //        .ContentPartRecord()
-            //        .Column<int>("EmployeeId")
-            //        .Column<string>("FirstName")
-            //        .Column<string>("LastName")
-            //        .Column<int>("CurrentJobStep_Id", col => col.Nullable())
-            //        .Column<int>("PriorJobStep_Id", col => col.Nullable())
-            //);
+            SchemaBuilder.CreateTable(
+                typeof(EmployeePartRecord).Name,
+                table => table
+                    .ContentPartRecord()
+                    .Column<int>("EmployeeId")
+                    .Column<string>("FirstName")
+                    .Column<string>("LastName")
+                    .Column<int>("CurrentJobStep_Id", col => col.Nullable())
+                    .Column<int>("PriorJobStep_Id", col => col.Nullable())
+            );
 
             SchemaBuilder.CreateTable(
                 typeof(ReviewPartRecord).Name,
@@ -39,7 +39,7 @@ namespace CSM.Form100
                     .ContentPartRecord()
                     .Column<string>("PendingReviewsIds")
                     .Column<string>("ReviewHistoryIds")
-                    //.Column<string>("Status")
+                    .Column<string>("Status")
             );
 
 			// creating tables for non-part record classes

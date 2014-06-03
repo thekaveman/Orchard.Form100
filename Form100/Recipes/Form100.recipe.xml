@@ -34,39 +34,39 @@
   </Data>
 
   <Workflows>
-    <Workflow Name="Form100 Testing" Enabled="true">
+    <Workflow Name="Form100" Enabled="true">
       <Activities>
-        <Activity Id="22" Name="ContentPublished" Start="true" X="285" Y="151">
+        <Activity Id="29" Name="ContentPublished" Start="true" X="285" Y="151">
           <State>{"ContentTypes":"Form100"}</State>
         </Activity>
-        <Activity Id="23" Name="StatusDecision" Start="false" X="430" Y="279">
+        <Activity Id="30" Name="StatusDecision" Start="false" X="518" Y="313">
           <State>{}</State>
         </Activity>
-        <Activity Id="24" Name="Notify" Start="false" X="384" Y="385">
+        <Activity Id="31" Name="Notify" Start="false" X="485" Y="495">
           <State>{"Notification":"Warning","Message":"Status: {Review.Status}"}</State>
         </Activity>
-        <Activity Id="25" Name="Notify" Start="false" X="459" Y="449">
+        <Activity Id="32" Name="Notify" Start="false" X="617" Y="495">
           <State>{"Notification":"Warning","Message":"Status: {Review.Status}"}</State>
         </Activity>
-        <Activity Id="26" Name="SendEmail" Start="false" X="920" Y="191">
+        <Activity Id="33" Name="SendEmail" Start="false" X="920" Y="191">
           <State>{"Recipients":"{Review.Next.Email}","Subject":"Form 100 review","Body":"&lt;p&gt;Hello {Review.Next.Name},&lt;/p&gt;\r\n\r\n&lt;p&gt;Your review of a ({Review.Status}) Form 100 for {Employee.Name} is requested.&lt;/p&gt;\r\n\r\n&lt;p&gt;\r\n&lt;a href=\"http://localhost:30321/{Content.DisplayUrl}\"&gt;Review&lt;/a&gt;\r\n&lt;br /&gt;\r\n&lt;a href=\"{Site.BaseUrl}/Form100/Reviews/{Content.Id}/{Review.Next.Approving}\"&gt;Approve&lt;/a&gt;\r\n&lt;br /&gt;\r\n&lt;a href=\"{Site.BaseUrl}/Form100/Reviews/{Content.Id}/{Review.Next.Rejecting}\"&gt;Reject&lt;/a&gt;\r\n&lt;/p&gt;"}</State>
         </Activity>
-        <Activity Id="27" Name="MergeBranch" Start="false" X="761" Y="201">
+        <Activity Id="34" Name="MergeBranch" Start="false" X="761" Y="201">
           <State>{}</State>
         </Activity>
-        <Activity Id="28" Name="SendEmail" Start="false" X="628" Y="342">
+        <Activity Id="35" Name="SendEmail" Start="false" X="922" Y="306">
           <State>{"Recipients":"{Review.History.Emails}","Subject":"Form 100 complete","Body":"&lt;p&gt;Review team,&lt;/p&gt;\r\n\r\n&lt;p&gt;Thank for you for reviewing {Employee.Name}'s Form 100.&lt;/p&gt;\r\n\r\n&lt;p&gt;This email confirms that this Form 100 process is complete.&lt;/p&gt;"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="22" SourceEndpoint="Done" DestinationActivityId="23" DestinationEndpoint="" />
-        <Transition SourceActivityId="23" SourceEndpoint="Undefined" DestinationActivityId="24" DestinationEndpoint="" />
-        <Transition SourceActivityId="23" SourceEndpoint="Rejected" DestinationActivityId="25" DestinationEndpoint="" />
-        <Transition SourceActivityId="23" SourceEndpoint="New" DestinationActivityId="27" DestinationEndpoint="" />
-        <Transition SourceActivityId="23" SourceEndpoint="InProgress" DestinationActivityId="27" DestinationEndpoint="" />
-        <Transition SourceActivityId="23" SourceEndpoint="Submitted" DestinationActivityId="27" DestinationEndpoint="" />
-        <Transition SourceActivityId="27" SourceEndpoint="Done" DestinationActivityId="26" DestinationEndpoint="" />
-        <Transition SourceActivityId="23" SourceEndpoint="Approved" DestinationActivityId="28" DestinationEndpoint="" />
+        <Transition SourceActivityId="29" SourceEndpoint="Done" DestinationActivityId="30" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Undefined" DestinationActivityId="31" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Rejected" DestinationActivityId="32" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="New" DestinationActivityId="34" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="InProgress" DestinationActivityId="34" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Submitted" DestinationActivityId="34" DestinationEndpoint="" />
+        <Transition SourceActivityId="34" SourceEndpoint="Done" DestinationActivityId="33" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Approved" DestinationActivityId="35" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
   </Workflows>
