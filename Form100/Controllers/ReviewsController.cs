@@ -13,10 +13,10 @@ namespace CSM.Form100.Controllers
     public class ReviewsController : Controller
     {
         //lazy-load the services only when they are needed
-        private readonly Lazy<IContentManager> contentManager;
-        private readonly Lazy<IReviewService> reviewService;
+        private readonly IContentManager contentManager;
+        private readonly IReviewService reviewService;
 
-        public ReviewsController(Lazy<IContentManager> contentManager, Lazy<IReviewService> reviewService)
+        public ReviewsController(IContentManager contentManager, IReviewService reviewService)
         {
             this.contentManager = contentManager;
             this.reviewService = reviewService;
@@ -26,7 +26,7 @@ namespace CSM.Form100.Controllers
         {
             if (id > 0)
             {
-                var review = contentManager.Value.Get<ReviewPart>(id);
+                var review = contentManager.Get<ReviewPart>(id);
             }
 
             return Redirect("~");
@@ -38,9 +38,9 @@ namespace CSM.Form100.Controllers
             {
                 //use contentManger.Value to get the lazy-loaded contentManager
                 //get a new draft version of the contentItem by its id
-                var contentItem = contentManager.Value.Get(id, VersionOptions.DraftRequired);
+                var contentItem = contentManager.Get(id, VersionOptions.DraftRequired);
 
-                if (contentItem != null && contentItem.Has<ReviewPart>())
+                if (contentItem.Has<ReviewPart>())
                 {
                     //this content item is compatible, trigger an update
                     update(contentItem, status);
@@ -70,10 +70,10 @@ namespace CSM.Form100.Controllers
                     nextStep.ReviewDecision = status;
                     //pass nextStep through the reviewService for updating in DB
                     //then add it to the review history
-                    reviewPart.ReviewHistory.Add(reviewService.Value.UpdateReviewStep(nextStep));
+                    reviewPart.ReviewHistory.Add(reviewService.UpdateReviewStep(nextStep));
 
                     //finally, trigger a publish on the content item
-                    contentManager.Value.Publish(contentItem);
+                    contentManager.Publish(contentItem);
                 }
             }
         }
