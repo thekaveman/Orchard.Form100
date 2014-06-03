@@ -19,7 +19,7 @@ namespace CSM.Form100.Services
         {
             var target = new ActionPartViewModel();
 
-            target.EffectiveDate = part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString() : String.Empty;
+            target.EffectiveDate = part.EffectiveDate.HasValue ? part.EffectiveDate.Value.ToString("MMM dd, yyyy") : String.Empty;
             target.Category = part.Category;
             target.Type = part.Type;
             target.Detail = part.Detail;
