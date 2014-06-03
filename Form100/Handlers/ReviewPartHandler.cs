@@ -1,9 +1,9 @@
-﻿using CSM.Form100.Collections;
+﻿using System.Collections.Generic;
+using CSM.Form100.Collections;
 using CSM.Form100.Models;
 using CSM.Form100.Services;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using System.Collections.Generic;
 
 namespace CSM.Form100.Handlers
 {
@@ -35,7 +35,7 @@ namespace CSM.Form100.Handlers
                 string ids = part.Record.PendingReviewsIds;
 
                 //deserialize if posible into a collection of ReviewStepRecords
-                IEnumerable<ReviewStepRecord> reviewSteps = reviewService.DeserializeReviewStepIds(ids);
+                IEnumerable<ReviewStepRecord> reviewSteps = reviewService.DeserializeReviewSteps(ids, r => r);
 
                 //create the appropriate ReviewChain ordering for pending reviews
                 return new ReviewChain(CollectionOrder.FIFO, part.Record, reviewService, reviewSteps);
@@ -46,7 +46,7 @@ namespace CSM.Form100.Handlers
                 string ids = part.Record.ReviewHistoryIds;
 
                 //deserialize if posible into a collection of ReviewStepRecords
-                var reviewSteps = reviewService.DeserializeReviewStepIds(ids);
+                var reviewSteps = reviewService.DeserializeReviewSteps(ids, r => r);
 
                 //create the appropriate ReviewChain ordering for review history
                 return new ReviewChain(CollectionOrder.LIFO, part.Record, reviewService, reviewSteps);
