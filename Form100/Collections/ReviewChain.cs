@@ -64,14 +64,17 @@ namespace CSM.Form100.Collections
         private void serializeToTarget()
         {
             if (target != null && reviewService != null)
+            { 
                 //serialize to the appropriate record property
                 decide(
                     //pass a no-op for the list argument (never used)
                     () => { },
                     //the reviewService serializes the underlying collection to a comma-separated list of ids
                     () => target.PendingReviewsIds = reviewService.SerializeReviewSteps(queue, r => r.Id),
-                    () => target.ReviewHistoryIds = reviewService.SerializeReviewSteps(stack, r => r.Id)
+                    //reverse the stack so that deserializing preserves the original order
+                    () => target.ReviewHistoryIds = reviewService.SerializeReviewSteps(stack.Reverse(), r => r.Id)
                 );
+            }
         }
     }
 }

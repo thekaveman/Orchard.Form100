@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace CSM.Form100
@@ -21,6 +23,25 @@ namespace CSM.Form100
             {
                 return String.Empty;
             }
+        }
+    }
+
+    public static class IEnumerableExtensions
+    {
+        /// <summary>
+        /// Wraps the Any() LINQ method in a null-check.
+        /// </summary>
+        public static bool SafeAny<T>(this IEnumerable<T> enumerable)
+        {
+            return enumerable != null && enumerable.Any();
+        }
+
+        /// <summary>
+        /// Wraps the Any() LINQ method in a null-check.
+        /// </summary>
+        public static bool SafeAny<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
+        {
+            return enumerable != null && enumerable.Any(predicate);
         }
     }
 }

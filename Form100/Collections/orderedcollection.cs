@@ -62,7 +62,7 @@ namespace CSM.Form100.Collections
 
             //ensure there is an item to return
 
-            if (this.Any())
+            if (this.SafeAny())
             {
                 //get the next item from the appropriate container
 
@@ -86,7 +86,7 @@ namespace CSM.Form100.Collections
 
             //ensure there is an item to return
 
-            if (this.Any())
+            if (this.SafeAny())
             {
                 //get the next item from the appropriate container
 
@@ -105,6 +105,9 @@ namespace CSM.Form100.Collections
         /// </summary>
         protected void decide(Action listAction, Action queueAction, Action stackAction)
         {
+            if (listAction == null || queueAction == null || stackAction == null)
+                throw new ArgumentNullException("Must provide an action for each collection type");
+
             if (Order == CollectionOrder.FIFO)
                 queueAction();
             else if (Order == CollectionOrder.LIFO)
@@ -119,6 +122,9 @@ namespace CSM.Form100.Collections
         /// <typeparam name="TResult">The return type of each provided function.</typeparam>
         protected TResult decide<TResult>(Func<TResult> listFunction, Func<TResult> queueFunction, Func<TResult> stackFunction)
         {
+            if (listFunction == null || queueFunction == null || stackFunction == null)
+                throw new ArgumentNullException("Must provide a function for each collection type");
+
             if (Order == CollectionOrder.FIFO)
                 return queueFunction();
             else if (Order == CollectionOrder.LIFO)
