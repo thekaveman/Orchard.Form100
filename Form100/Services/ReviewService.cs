@@ -63,22 +63,31 @@ namespace CSM.Form100.Services
 
         public string SerializeReviewSteps<T>(IEnumerable<ReviewStepRecord> reviewSteps, Func<ReviewStepRecord, T> propertySelector, bool distinct = false)
         {
-            var projectedValues = reviewSteps.Select(propertySelector);
+            if (propertySelector == null) throw new ArgumentNullException("propertySelector");
 
-            if(distinct)
-                projectedValues = projectedValues.Distinct();
+            if (reviewSteps != null && reviewSteps.Any())
+            {
+                var projectedValues = reviewSteps.Select(propertySelector);
 
-            return String.Join(separator, projectedValues);
+                if (distinct)
+                    projectedValues = projectedValues.Distinct();
+
+                return String.Join(separator, projectedValues);
+            }
+
+            return String.Empty;
         }
 
-        public IEnumerable<ReviewStepRecord> DeserializeReviewStepIds(string reviewStepIds)
+        public IEnumerable<T> DeserializeReviewSteps<T>(string reviewStepIds, Func<ReviewStepRecord, T> propertySelector)
         {
+            if(propertySelector == null) throw new ArgumentNullException("propertySelector");
+
             var reviewSteps = (reviewStepIds ?? "")
                     .Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(id => GetReviewStep(int.Parse(id)))
             ;
 
-            return reviewSteps;
+            return reviewSteps.Select(propertySelector);
         }
 
         internal IEnumerable<ReviewStepRecord> getReviewSteps(string reviewStepJSON, string reviewPartId)

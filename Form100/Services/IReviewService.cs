@@ -45,7 +45,7 @@ namespace CSM.Form100.Services
         ReviewStepRecord UpdateReviewStep(ReviewStepRecord step);
 
         /// <summary>
-        /// Serialize the ids of a collection of ReviewStepRecords.
+        /// Serialize a collection of ReviewStepRecords.
         /// </summary>
         /// <param name="reviewSteps">The ReviewStepRecords to serialize</param>
         /// <param name="propertySelector">A function to select a property from each ReviewStepRecord</param>
@@ -57,7 +57,8 @@ namespace CSM.Form100.Services
         /// Deserialize the ids of a sequence of ReviewStepRecords.
         /// </summary>
         /// <param name="reviewStepIds">A comma-separated list of ReviewStepRecord ids</param>
-        /// <returns>A collection of ReviewStepRecords.</returns>
-        IEnumerable<ReviewStepRecord> DeserializeReviewStepIds(string reviewStepIds);
+        /// /// <param name="propertySelector">A function to select a property from each ReviewStepRecord</param>
+        /// <returns>A collection of T, the type projected by the propertySelector.</returns>
+        IEnumerable<T> DeserializeReviewSteps<T>(string reviewStepIds, Func<ReviewStepRecord, T> propertySelector);
     }
 }
