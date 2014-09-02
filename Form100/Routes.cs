@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
-using Orchard.WebApi.Routes;
 
 namespace CSM.Form100
 {
@@ -18,31 +15,15 @@ namespace CSM.Form100
             return new[] {
                 new RouteDescriptor() {
                     Route = new Route(
-                        url: "Form100/Reviews/{id}",
+                        url: "Form100/Reviews/{id}/{state}",
                         defaults: new RouteValueDictionary() {
                             { "area", Area },
                             { "controller", "Reviews" },
-                            { "action", "Index" },
-                            { "id", UrlParameter.Optional }
-                        },
-                        constraints: new RouteValueDictionary(),
-                        dataTokens: new RouteValueDictionary() {
-                            { "area", Area }
-                        },
-                        routeHandler: new MvcRouteHandler()
-                    )
-                },
-                new RouteDescriptor() {
-                    Route = new Route(
-                        url: "Form100/Reviews/{id}/{status}",
-                        defaults: new RouteValueDictionary() {
-                            { "area", Area },
-                            { "controller", "Reviews" },
-                            { "action", "Update" },
+                            { "action", "CompleteReviewStep" },
                         },
                         constraints: new RouteValueDictionary() {
                             { "id", @"\d+" },
-                            { "status", String.Format("({0})", String.Join("|", Enum.GetNames(typeof(WorkflowStatus)))) }
+                            { "state", String.Format("({0})", String.Join("|", Enum.GetNames(typeof(WorkflowStatus)))) }
                         },
                         dataTokens: new RouteValueDictionary() {
                             { "area", Area }
@@ -66,7 +47,27 @@ namespace CSM.Form100
                         },
                         routeHandler: new MvcRouteHandler()
                     )
-                }
+                },
+                new RouteDescriptor() {
+                    Route = new Route(
+                        url: "Form100/Reviews/{id}",
+                        defaults: new RouteValueDictionary() {
+                            { "area", Area },
+                            { "controller", "Reviews" },
+                            { "action", "Index" },
+                            { "id", UrlParameter.Optional }
+                        },
+                        constraints: new RouteValueDictionary() {
+                            { "id", @"\d*" }
+                        },
+                        dataTokens: new RouteValueDictionary() {
+                            { "area", Area }
+                        },
+                        routeHandler: new MvcRouteHandler()
+                    )
+                },
+                
+                
             };
         }
 

@@ -25,7 +25,7 @@ namespace CSM.Form100.Services
         public ReviewPartViewModel GetReviewViewModel(ReviewPart part)
         {
             var viewModel = new ReviewPartViewModel() {
-                Status = part.Status,
+                State = part.State,
                 PendingReviewsData = getReviewStepsJSON(part.PendingReviews),
                 ReviewHistoryData = getReviewStepsJSON(part.ReviewHistory)
             };
@@ -38,7 +38,7 @@ namespace CSM.Form100.Services
             var identityPart = part.As<IdentityPart>();
             string identity = identityPart.Identifier ?? part.Id.ToString();
 
-            part.Status = viewModel.Status;
+            part.State = viewModel.State;
             part.Record.PendingReviewsIds = getReviewStepIds(viewModel.PendingReviewsData, identity);
             part.Record.ReviewHistoryIds = getReviewStepIds(viewModel.ReviewHistoryData, identity);
         }
@@ -48,7 +48,7 @@ namespace CSM.Form100.Services
             var reviewStep = reviewStepRepository.Get(id);
             return reviewStep;
         }
-
+        
         public ReviewStepRecord CreateReviewStep(ReviewStepRecord reviewStep)
         {
             reviewStepRepository.Create(reviewStep);

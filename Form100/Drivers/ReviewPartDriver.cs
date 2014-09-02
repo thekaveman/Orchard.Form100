@@ -36,9 +36,11 @@ namespace CSM.Form100.Drivers
         /// </summary>
         protected override DriverResult Display(ReviewPart part, string displayType, dynamic shapeHelper)
         {
+            var viewModel = reviewService.GetReviewViewModel(part);
+
             return ContentShape(
                 "Parts_Review",
-                () => shapeHelper.Parts_Review(part)
+                () => shapeHelper.Parts_Review(viewModel)
             );
         }
 
@@ -67,7 +69,7 @@ namespace CSM.Form100.Drivers
         {
             var viewModel = new ReviewPartViewModel();
 
-            if (updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableStatuses" }))
+            if (updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableStates" }))
             {
                 reviewService.UpdateReview(viewModel, part);
             }
@@ -83,9 +85,9 @@ namespace CSM.Form100.Drivers
         {
             var reviewNode = context.Element(part.PartDefinition.Name);
 
-            reviewNode.SetAttributeValue("Status", part.Status);
+            reviewNode.SetAttributeValue("State", part.State);
 
-            if (part.PendingReviews != null && part.PendingReviews.Any())
+            if (part.PendingReviews.SafeAny())
             {
                 var pendingReviewsNode = new XElement("PendingReviews");
                 var clone = part.PendingReviews.WeakClone();
@@ -99,7 +101,7 @@ namespace CSM.Form100.Drivers
                 reviewNode.Add(pendingReviewsNode);
             }
 
-            if (part.ReviewHistory != null && part.ReviewHistory.Any())
+            if (part.ReviewHistory.SafeAny())
             {
                 var reviewHistoryNode = new XElement("ReviewHistory");
                 var clone = part.ReviewHistory.WeakClone();
@@ -122,14 +124,14 @@ namespace CSM.Form100.Drivers
         {
             var reviewNode = context.Data.Element(part.PartDefinition.Name);
 
-            context.ImportAttribute(reviewNode.Name.LocalName, "Status", s =>
+            context.ImportAttribute(reviewNode.Name.LocalName, "State", s =>
             {
-                WorkflowStatus status;
+                WorkflowStatus state;
 
-                if (Enum.TryParse(s, out status))
-                    part.Status = status;
+                if (Enum.TryParse(s, out state))
+                    part.State = state;
                 else
-                    throw new InvalidOperationException("Couldn't parse Status attribute to WorkflowStatus enum.");
+                    throw new InvalidOperationException("Couldn't parse State attribute to WorkflowStatus enum.");
             });
 
             var pendingReviewsNode = reviewNode.Element("PendingReviews");
@@ -158,8 +160,10 @@ namespace CSM.Form100.Drivers
             var reviewStepNode = new XElement("ReviewStep");
 
             reviewStepNode.SetAttributeValue("ReviewPartIdentifier", reviewStep.ReviewPartIdentifier);
-            reviewStepNode.SetAttributeValue("ApprovingStatus", reviewStep.ApprovingStatus);
-            reviewStepNode.SetAttributeValue("RejectingStatus", reviewStep.RejectingStatus);
+            reviewStepNode.SetAttributeValue("TargetStates", reviewStep.TargetStates);
+            reviewStepNode.SetAttributeValue("ApprovingState", reviewStep.ApprovingState);
+            reviewStepNode.SetAttributeValue("RejectingState", reviewStep.RejectingState);
+            reviewStepNode.SetAttributeValue("NotificationDate", reviewStep.NotificationDate.HasValue ? reviewStep.NotificationDate.Value.ToString() : String.Empty);
             reviewStepNode.SetAttributeValue("ReviewDate", reviewStep.ReviewDate.HasValue ? reviewStep.ReviewDate.Value.ToString() : String.Empty);
             reviewStepNode.SetAttributeValue("ReviewDecision", reviewStep.ReviewDecision);
             reviewStepNode.SetAttributeValue("ReviewerName", reviewStep.ReviewerName);
@@ -172,31 +176,37 @@ namespace CSM.Form100.Drivers
         {
             ReviewStepRecord reviewStep = new ReviewStepRecord() {
                 ReviewPartIdentifier = reviewStepNode.SafeGetAttribute("ReviewPartIdentifier"),
+                TargetStates = reviewStepNode.SafeGetAttribute("TargetStates"),
                 ReviewerName = reviewStepNode.SafeGetAttribute("ReviewerName"),
                 ReviewerEmail = reviewStepNode.SafeGetAttribute("ReviewerEmail")
             };
             
             WorkflowStatus status;
 
-            if (Enum.TryParse(reviewStepNode.SafeGetAttribute("ApprovingStatus"), out status))
-                reviewStep.ApprovingStatus = status;
+            if (Enum.TryParse(reviewStepNode.SafeGetAttribute("ApprovingState"), out status))
+                reviewStep.ApprovingState = status;
             else
-                reviewStep.ApprovingStatus = WorkflowStatus.Undefined;
+                reviewStep.ApprovingState = WorkflowStatus.Undefined;
 
-            if (Enum.TryParse(reviewStepNode.SafeGetAttribute("RejectingStatus"), out status))
-                reviewStep.RejectingStatus = status;
+            if (Enum.TryParse(reviewStepNode.SafeGetAttribute("RejectingState"), out status))
+                reviewStep.RejectingState = status;
             else
-                reviewStep.RejectingStatus = WorkflowStatus.Undefined;
+                reviewStep.RejectingState = WorkflowStatus.Undefined;
 
             if (Enum.TryParse(reviewStepNode.SafeGetAttribute("ReviewDecision"), out status))
                 reviewStep.ReviewDecision = status;
             else
                 reviewStep.ReviewDecision = WorkflowStatus.Undefined;
 
-            DateTime reviewDate;
+            DateTime date;
 
-            if (DateTime.TryParse(reviewStepNode.SafeGetAttribute("ReviewDate"), out reviewDate))
-                reviewStep.ReviewDate = reviewDate;
+            if (DateTime.TryParse(reviewStepNode.SafeGetAttribute("NotificationDate"), out date))
+                reviewStep.NotificationDate = date;
+            else
+                reviewStep.NotificationDate = null;
+
+            if (DateTime.TryParse(reviewStepNode.SafeGetAttribute("ReviewDate"), out date))
+                reviewStep.ReviewDate = date;
             else
                 reviewStep.ReviewDate = null;
 

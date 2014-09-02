@@ -48,8 +48,8 @@ namespace CSM.Form100.Activities
                 var currentItem = workflowContext.Content.ContentItem.As<ReviewPart>();
 
                 if (currentItem != null)
-                    //if so, return a LocalizedString of the ReviewPart's status
-                    yield return T(currentItem.Status.ToString());
+                    //if so, return a LocalizedString of the ReviewPart's state
+                    yield return T(currentItem.State.ToString());
             }
             
             //default to an empty LocalizedString

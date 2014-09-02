@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CSM.Form100.Models
 {
@@ -8,9 +10,13 @@ namespace CSM.Form100.Models
 
         public virtual string ReviewPartIdentifier { get; set; }
 
-        public virtual WorkflowStatus ApprovingStatus { get; set; }
+        public virtual string TargetStates { get; set; }
+        
+        public virtual WorkflowStatus ApprovingState { get; set; }
 
-        public virtual WorkflowStatus RejectingStatus { get; set; }
+        public virtual WorkflowStatus RejectingState { get; set; }
+
+        public virtual DateTime? NotificationDate { get; set; }
 
         public virtual DateTime? ReviewDate { get; set; }
 
@@ -22,10 +28,24 @@ namespace CSM.Form100.Models
 
         public ReviewStepRecord()
         {
-            ApprovingStatus = WorkflowStatus.Undefined;
-            RejectingStatus = WorkflowStatus.Undefined;
-            ReviewDecision = WorkflowStatus.Undefined;
+            ApprovingState = WorkflowStatus.Undefined;
+            RejectingState = WorkflowStatus.Undefined;
+            NotificationDate = null;
             ReviewDate = null;
+            ReviewDecision = WorkflowStatus.Undefined;
+        }
+
+        internal ReviewStepRecord(ReviewStepRecord other)
+        {
+            ReviewPartIdentifier = other.ReviewPartIdentifier;
+            TargetStates = other.TargetStates;
+            ApprovingState = other.ApprovingState;
+            RejectingState = other.RejectingState;
+            NotificationDate = null;
+            ReviewDate = null;
+            ReviewDecision = WorkflowStatus.Undefined;
+            ReviewerName = other.ReviewerName;
+            ReviewerEmail = other.ReviewerEmail;
         }
     }
 }

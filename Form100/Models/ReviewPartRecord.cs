@@ -9,11 +9,11 @@ namespace CSM.Form100.Models
 
         public virtual string ReviewHistoryIds { get; set; }
 
-        public virtual WorkflowStatus Status { get; set; }
+        public virtual WorkflowStatus State { get; set; }
 
         public ReviewPartRecord()
         {
-            Status = WorkflowStatus.New;
+            State = WorkflowStatus.New;
         }
     }
 }

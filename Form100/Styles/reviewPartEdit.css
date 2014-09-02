@@ -1,10 +1,10 @@
 ﻿table.items.pendingReviews { margin-top: 1em; }
 
 table.pendingReviews td:first-of-type,
-table.reviewHistory td:first-of-type { width: 5%; }
+table.reviewHistory td:first-of-type { width: 3%; }
 
-table.pendingReviews td:nth-of-type(2) { width: 35%; }
+table.pendingReviews td:nth-of-type(2) { width: 25%; }
 
 @media screen and (min-width: 1300px) {
-    table.pendingReviews td:nth-of-type(2) { width: 20%; }
+    table.pendingReviews td:nth-of-type(2) { width: 10%; }
 }

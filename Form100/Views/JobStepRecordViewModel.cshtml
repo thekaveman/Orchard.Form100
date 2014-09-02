@@ -1,0 +1,33 @@
+﻿@model CSM.Form100.ViewModels.JobStepRecordViewModel
+
+<h2>Job Class @Model.Qualifier</h2>
+
+<p>
+    <span class="label">Title: </span>
+    <span>@Model.Title</span>
+</p>
+
+<p>
+    <span class="label">Department: </span>
+    <span>@Model.DepartmentName</span>
+</p>
+
+<p>
+    <span class="label">Division: </span>
+    <span>@Model.DivisionName (#@Model.DivisionNumber)</span>
+</p>
+
+<p>
+    <span class="label">Step: </span>
+    <span>@Model.StepNumber</span>
+</p>
+
+<p>
+    <span class="label">Basic Rate of Pay: </span>
+    <span>@Model.HourlyRate</span>
+</p>
+
+<p>
+    <span class="label">Hours/Week: </span>
+    <span>@Model.HoursPerWeek</span>
+</p>

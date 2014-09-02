@@ -85,6 +85,7 @@
     <Content Include="Recipes\Form100.recipe.xml" />
     <Content Include="Scripts\knockout-sortable.min.js" />
     <Content Include="Scripts\reviewPartEdit.js" />
+    <Content Include="Styles\display.css" />
     <Content Include="Styles\reviewPartEdit.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -102,6 +103,10 @@
     <Compile Include="Collections\ReviewChain.cs" />
     <Compile Include="Drivers\WorkflowStatusFieldDriver.cs" />
     <Compile Include="Fields\WorkflowStatusField.cs" />
+    <Compile Include="Handlers\Form100FeatureHandler.cs" />
+    <Compile Include="Migrations.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Routes.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Drivers\ActionPartDriver.cs" />
@@ -111,7 +116,6 @@
     <Compile Include="Handlers\ActionPartHandler.cs" />
     <Compile Include="Handlers\EmployeePartHandler.cs" />
     <Compile Include="Handlers\ReviewPartHandler.cs" />
-    <Compile Include="Migrations.cs" />
     <Compile Include="Models\ActionPart.cs" />
     <Compile Include="Models\ActionPartRecord.cs" />
     <Compile Include="ActionCategory.cs" />
@@ -173,6 +177,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Fields\WorkflowStatus.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Review.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Action.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Employee.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\JobStepRecordViewModel.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

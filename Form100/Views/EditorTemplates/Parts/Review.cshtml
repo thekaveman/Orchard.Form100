@@ -4,32 +4,55 @@
     Script.Require("jQuery");
     Script.Require("jQueryUI");
     Style.Include("reviewPartEdit.css");
+    
+    Script.Include("http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js").AtFoot();
+    Script.Include("knockout-sortable.min.js").AtFoot();
+    Script.Include("reviewPartEdit.js").AtFoot();
 }
 
 <div id="pendingReviews">
 
     <fieldset>
         <legend>
-            Required Approval(s)
+            Pending Reviews
         </legend>
 
         <span data-bind="visible: reviews().length < 1">No reviewers have been assigned yet</span>
 
-        <table class="pendingReviews items" data-bind="sortable: reviews">
-            <tr>
-                <td>
-                    <span data-bind="text: $index() + 1"></span>.
-                </td>
-                <td>
-                    <span data-bind="text: ReviewerName"></span>
-                    (<span data-bind="text: ApprovingStatus"></span>,
-                    <span data-bind="text: RejectingStatus"></span>)
-                </td>
-                <td>
-                    <a class="button primaryAction" href="#" data-bind="click: $parent.editReviewStep">Edit</a>
-                    <a class="button primaryAction" href="#" data-bind="click: $parent.removeReviewStep">Remove</a>
-                </td>
-            </tr>
+        <table class="pendingReviews items" data-bind="visible: reviews().length > 0">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Name</th>
+                    <th>Approving State</th>
+                    <th>Rejecting State</th>
+                    <th>Target Review States</th>
+                </tr>
+            </thead>
+            <tbody data-bind="sortable: reviews">
+                <tr>
+                    <td>
+                        <span data-bind="text: $index() + 1"></span>.
+                    </td>
+                    <td class="buttons">
+                        <a class="button primaryAction" href="#" data-bind="click: $parent.editReviewStep">Edit</a>
+                        <a class="button primaryAction" href="#" data-bind="click: $parent.removeReviewStep">Remove</a>
+                    </td>
+                    <td class="name">
+                        <span data-bind="text: ReviewerName"></span>
+                    </td>
+                    <td class="approving">
+                        <span data-bind="text: ApprovingState"></span>
+                    </td>
+                    <td class="rejecting">
+                        <span data-bind="text: RejectingState"></span>
+                    </td>
+                    <td class="valid">
+                        [<span data-bind="text: TargetStates"></span>]
+                    </td>
+                </tr>
+            </tbody>
         </table>
 
     </fieldset>
@@ -38,10 +61,20 @@
         <label>New Review Step</label>
         <input type="text" class="text" data-bind="value: name, valueUpdate: 'afterkeydown'" placeholder="First Last" />
         <input type="text" class="text" data-bind="value: email, valueUpdate: 'afterkeydown'" placeholder="email@example.com" />
-        <select data-bind="options: availableStatuses, value: approvingStatus"></select>
-        <select data-bind="options: availableStatuses, value: rejectingStatus"></select>
+        <label>Approving: </label>
+        <select data-bind="options: availableStates, value: approvingState"></select>
+        <br />
+        <label>Rejecting: </label>
+        <select data-bind="options: availableStates, value: rejectingState"></select>
+        <label>Targets:</label>
+        <ul data-bind="foreach: availableStates">
+            <li>
+                <input type="checkbox" data-bind="checked: $parent.targetStates, checkedValue: $data" />
+                <span data-bind="text: $data"></span>
+            </li>
+        </ul>
         <a class="button primaryAction" href="#" data-bind="click: addReviewStep">Add</a>
-    </fieldset>
+</fieldset>
 
     <fieldset>
         <label>Raw Data</label>
@@ -50,8 +83,8 @@
     </fieldset>
 
     <fieldset>
-        @Html.LabelFor(m => m.Status, T("Status"))
-        @Html.TextBoxFor(m => m.Status, new { disabled = "true" })
+        @Html.LabelFor(m => m.State, T("State"))
+        @Html.TextBoxFor(m => m.State, new { disabled = "true" })
     </fieldset>
 </div>
 
@@ -61,19 +94,32 @@
 
         <span data-bind="visible: reviews().length < 1">No reviews have taken place yet.</span>
 
-        <table class="reviewHistory items" data-bind="foreach: reviews">
-            <tr>
-                <td>
-                    <span data-bind="text: $index() + 1"></span>.
-                </td>
-                <td>
-                    <span data-bind="text: ReviewerName"></span>
-                    &nbsp;
-                    (<span data-bind="text: ReviewDate"></span>)
-                    &nbsp;-->&nbsp;
-                    <span data-bind="text: ReviewDecision"></span>
-                </td>
-            </tr>
+        <table class="reviewHistory items" data-bind="visible: reviews().length > 0">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Name</th>
+                    <th>Review Date</th>
+                    <th>Review Decision</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: reviews">
+                <tr>
+                    <td>
+                        <span data-bind="text: $index() + 1"></span>.
+                    </td>
+                    <td>
+                        <span data-bind="text: ReviewerName"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: ReviewDate"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: ReviewDecision"></span>
+                    </td>
+                </tr>
+            </tbody>
+            
         </table>
     </fieldset>
 
@@ -86,19 +132,15 @@
 
 @using (Script.Foot())
 {
-    Script.Include("http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js");
-    Script.Include("knockout-sortable.min.js");
-    Script.Include("reviewPartEdit.js");
-    
     <script type="text/javascript">
         var regx = /&quot;/g,
             replace = '"',
-            defaultStatus = '@Model.DefaultStatus',
+            defaultState = '@Model.DefaultState',
             pendingReviews = JSON.parse('@Model.PendingReviewsData'.replace(regx, replace)),
             reviewHistory = JSON.parse('@Model.ReviewHistoryData'.replace(regx, replace)),
-            availableStatuses = JSON.parse('@Model.AvailableStatuses'.replace(regx, replace)),
-            pendingViewModel = new reviewsViewModel(pendingReviews, availableStatuses, defaultStatus),
-            historyViewModel = new reviewsViewModel(reviewHistory, availableStatuses, defaultStatus);
+            availableStates = JSON.parse('@Model.AvailableStates'.replace(regx, replace)),
+            pendingViewModel = new reviewsViewModel(pendingReviews, availableStates, defaultState),
+            historyViewModel = new reviewsViewModel(reviewHistory, availableStates, defaultState);
 
         ko.applyBindings(pendingViewModel, document.getElementById("pendingReviews"));
         ko.applyBindings(historyViewModel, document.getElementById("reviewHistory"));

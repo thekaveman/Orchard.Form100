@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using CSM.Form100.Models;
+using CSM.Form100.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Tokens;
-using CSM.Form100.Services;
 
 namespace CSM.Form100.Tokens
 {
@@ -29,17 +28,19 @@ namespace CSM.Form100.Tokens
             //provide 7 tokens:
             context.For("Review", T("Review"), T("Tokens for the ReviewPart."))
                     //{Review.Status}
-                    .Token("Status", T("Status"), T("The current status of a ReviewPart."))
+                    .Token("State", T("State"), T("The current state of a ReviewPart."))
                     //{Review.Next}
                     .Token("Next", T("Next"), T("The next reviewer in the chain."))
+                    //{Review.Next.Id}
+                    .Token("Next.Id", T("Next.Id"), T("The id of the next reviewer in the chain."))
                     //{Review.Next.Name}
                     .Token("Next.Name", T("Next.Name"), T("The name of the next reviewer in the chain."))
                     //{Review.Next.Email}
                     .Token("Next.Email", T("Next.Email"), T("The email of the next reviewer in the chain."))
                     //{Review.Next.Approving}
-                    .Token("Next.Approving", T("Next.Accepting"), T("The approving status of the next reviewer in the chain."))
+                    .Token("Next.Approving", T("Next.Accepting"), T("The approving state of the next reviewer in the chain."))
                     //{Review.Next.Rejecting}
-                    .Token("Next.Rejecting", T("Next.Rejecting"), T("The rejecting status of the next reviewer in the chain."))
+                    .Token("Next.Rejecting", T("Next.Rejecting"), T("The rejecting state of the next reviewer in the chain."))
                     //{Review.History.Emails}
                     .Token("History.Emails", T("History.Emails"), T("The email addresses of each reviewer in the history."))
                     ;
@@ -56,41 +57,47 @@ namespace CSM.Form100.Tokens
             //provide the current ReviewPart, if any, as context data
             context.For<ReviewPart>("Review", part)
                     //evaluator function for {Review.Status}
-                    .Token("Status", reviewPart =>
+                    .Token("State", reviewPart =>
                     {
                         if (reviewPart != null)
-                            return reviewPart.Status.ToString();
-
+                            return reviewPart.State.ToString();
                         return WorkflowStatus.Undefined.ToString();
                     })
                     //evaluator function for {Review.Next}
-                    .Token("Next", reviewPart => reviewPart.PendingReviews.PeekNext())
+                    .Token("Next", reviewPart => reviewPart.PeekNextReviewStep(reviewService))
+                    //evaluator function for {Review.Next.Id}
+                    .Token("Next.Id", reviewPart => {
+                        var next = reviewPart.PeekNextReviewStep(reviewService);
+                        if (next != null)
+                            return next.Id.ToString();
+                        return String.Empty;
+                    })
                     //evaluator function for {Review.Next.Name}
                     .Token("Next.Name", reviewPart => {
-                        var next = reviewPart.PendingReviews.PeekNext();
+                        var next = reviewPart.PeekNextReviewStep(reviewService);
                         if (next != null)
                             return next.ReviewerName;
                         return String.Empty;
                     })
                     //evaluator function for {Review.Next.Email}
                     .Token("Next.Email", reviewPart => {
-                        var next = reviewPart.PendingReviews.PeekNext();
+                        var next = reviewPart.PeekNextReviewStep(reviewService);
                         if (next != null)
                             return next.ReviewerEmail;
                         return String.Empty;
                     })
                     //evaluator function for {Review.Next.Approving}
                     .Token("Next.Approving", reviewPart => {
-                        var next = reviewPart.PendingReviews.PeekNext();
+                        var next = reviewPart.PeekNextReviewStep(reviewService);
                         if (next != null)
-                            return next.ApprovingStatus.ToString();
+                            return next.ApprovingState.ToString();
                         return WorkflowStatus.Undefined.ToString();
                     })
                     //evaluator function for {Review.Next.Rejecting}
                     .Token("Next.Rejecting", reviewPart => {
-                        var next = reviewPart.PendingReviews.PeekNext();
+                        var next = reviewPart.PeekNextReviewStep(reviewService);
                         if (next != null)
-                            return next.RejectingStatus.ToString();
+                            return next.RejectingState.ToString();
                         return WorkflowStatus.Undefined.ToString();
                     })
                     //evaluator function for {Review.History.Emails}

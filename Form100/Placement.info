@@ -5,8 +5,20 @@
   <Place Parts_Action_Edit="Content:0.0"
          Parts_Employee_Edit="Content:0.1"
          Parts_Review_Edit="Content:0.2" />
-
+  
   <Place Fields_WorkflowStatus_Edit="Content:2.7"/>
+
+  <!-- Display shapes -->
+
+  <!--<Place Parts_Action="Content:0.0"
+         Parts_Employee="Content:0.1"
+         Parts_Review="Content:0.2" />
+
+  <Place Parts_Action_SummaryAdmin="-"
+         Parts_Employee_SummaryAdmin="-"
+         Parts_Review_SummaryAdmin="-" />-->
+
   <Place Fields_WorkflowStatus="Content:after"/>
 
+  
 </Placement>

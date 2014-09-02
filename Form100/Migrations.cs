@@ -39,15 +39,15 @@ namespace CSM.Form100
                     .ContentPartRecord()
                     .Column<string>("PendingReviewsIds")
                     .Column<string>("ReviewHistoryIds")
-                    .Column<string>("Status")
+                    .Column<string>("State")
             );
 
-			// creating tables for non-part record classes
-            
-			SchemaBuilder.CreateTable(
+            // creating tables for non-part record classes
+
+            SchemaBuilder.CreateTable(
                 typeof(JobStepRecord).Name,
                 table => table
-				    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
                     .Column<string>("EmployeePartIdentifier")
                     .Column<string>("Title")
                     .Column<string>("DepartmentName")
@@ -56,20 +56,22 @@ namespace CSM.Form100
                     .Column<int>("StepNumber")
                     .Column<int>("HoursPerWeek")
                     .Column<decimal>("HourlyRate", col => col.WithPrecision((byte)10).WithScale((byte)2))
-			);
+            );
 
-			SchemaBuilder.CreateTable(
+            SchemaBuilder.CreateTable(
                 typeof(ReviewStepRecord).Name,
                 table => table
                     .Column<int>("Id", col => col.PrimaryKey().Identity())
                     .Column<string>("ReviewPartIdentifier", col => col.Nullable())
-                    .Column<string>("ApprovingStatus")
-                    .Column<string>("RejectingStatus")
-                    .Column<string>("ReviewDecision")
+                    .Column<string>("TargetStates")
+                    .Column<string>("ApprovingState")
+                    .Column<string>("RejectingState")
+                    .Column<DateTime>("NotificationDate", col => col.Nullable())
                     .Column<DateTime>("ReviewDate", col => col.Nullable())
+                    .Column<string>("ReviewDecision")
                     .Column<string>("ReviewerName")
                     .Column<string>("ReviewerEmail")
-			);
+            );
 
             // defining the content parts that make up a Form 100
 

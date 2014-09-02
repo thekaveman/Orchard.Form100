@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<Orchard>  
+<Orchard>
   <Recipe>
     <Name>CSM.Form100</Name>
     <Description>A recipe for importing data and definitions for the CSM.Form100 module.</Description>
@@ -19,54 +19,66 @@
         <CurrentJobStep EmployeePartIdentifier="f795bbbacfae486baeda0afff168493e" Title="Administrative Intern" DepartmentName="ISD" DivisionName="Web Development" DivisionNumber="9876" StepNumber="1" HoursPerWeek="25" HourlyRate="14.77" />
       </EmployeePart>
       <ActionPart EffectiveDate="6/1/2014 12:00:00 AM" Category="Appointment" Type="New Hire" />
-      <ReviewPart Status="New">
+      <ReviewPart State="New">
         <PendingReviews>
-          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" ApprovingStatus="InProgress" RejectingStatus="Rejected" ReviewDate="" ReviewDecision="Undefined" ReviewerName="Division Head" ReviewerEmail="kegan.maher@smgov.net" />
-          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" ApprovingStatus="Submitted" RejectingStatus="Rejected" ReviewDate="" ReviewDecision="Undefined" ReviewerName="Department Head" ReviewerEmail="kegan.maher@smgov.net" />
-          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" ApprovingStatus="Submitted" RejectingStatus="InProgress" ReviewDate="" ReviewDecision="Undefined" ReviewerName="Human Resources" ReviewerEmail="kegan.maher@smgov.net" />
-          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" ApprovingStatus="Approved" RejectingStatus="Submitted" ReviewDate="" ReviewDecision="Undefined" ReviewerName="City Managers Office" ReviewerEmail="kegan.maher@smgov.net" />
+          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" TargetStates="New" ApprovingState="InProgress" RejectingState="Rejected" NotificationDate="" ReviewDate="" ReviewDecision="Undefined" ReviewerName="Division Head" ReviewerEmail="kegan.maher@smgov.net" />
+          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" TargetStates="InProgress" ApprovingState="Submitted" RejectingState="Rejected" NotificationDate="" ReviewDate="" ReviewDecision="Undefined" ReviewerName="Department Head" ReviewerEmail="kegan.maher@smgov.net" />
+          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" TargetStates="Submitted" ApprovingState="Submitted" RejectingState="InProgress" NotificationDate="" ReviewDate="" ReviewDecision="Undefined" ReviewerName="Human Resources" ReviewerEmail="kegan.maher@smgov.net" />
+          <ReviewStep ReviewPartIdentifier="f795bbbacfae486baeda0afff168493e" TargetStates="Submitted" ApprovingState="Approved" RejectingState="Submitted" NotificationDate="" ReviewDate="" ReviewDecision="Undefined" ReviewerName="City Managers Office" ReviewerEmail="kegan.maher@smgov.net" />
         </PendingReviews>
       </ReviewPart>
       <IdentityPart Identifier="f795bbbacfae486baeda0afff168493e" />
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2014-05-31T06:06:29.8438472Z" PublishedUtc="2014-05-31T06:15:15.3579049Z" ModifiedUtc="2014-05-31T06:15:15.3369037Z" />
       <TitlePart Title="Test New Hire" />
-    </Form100> 
+    </Form100>
   </Data>
 
   <Workflows>
     <Workflow Name="Form100" Enabled="true">
       <Activities>
-        <Activity Id="29" Name="ContentPublished" Start="true" X="285" Y="151">
+        <Activity Id="11" Name="ContentPublished" Start="true" X="285" Y="151">
           <State>{"ContentTypes":"Form100"}</State>
         </Activity>
-        <Activity Id="30" Name="StatusDecision" Start="false" X="518" Y="313">
+        <Activity Id="12" Name="StatusDecision" Start="false" X="518" Y="313">
           <State>{}</State>
         </Activity>
-        <Activity Id="31" Name="Notify" Start="false" X="485" Y="495">
-          <State>{"Notification":"Warning","Message":"Status: {Review.Status}"}</State>
+        <Activity Id="13" Name="Notify" Start="false" X="485" Y="495">
+          <State>{"Notification":"Warning","Message":"State: {Review.State}"}</State>
         </Activity>
-        <Activity Id="32" Name="Notify" Start="false" X="617" Y="495">
-          <State>{"Notification":"Warning","Message":"Status: {Review.Status}"}</State>
+        <Activity Id="14" Name="Notify" Start="false" X="617" Y="495">
+          <State>{"Notification":"Warning","Message":"State: {Review.State}"}</State>
         </Activity>
-        <Activity Id="33" Name="SendEmail" Start="false" X="920" Y="191">
-          <State>{"Recipients":"{Review.Next.Email}","Subject":"Form 100 review","Body":"&lt;p&gt;Hello {Review.Next.Name},&lt;/p&gt;\r\n\r\n&lt;p&gt;Your review of a ({Review.Status}) Form 100 for {Employee.Name} is requested.&lt;/p&gt;\r\n\r\n&lt;p&gt;\r\n&lt;a href=\"http://localhost:30321/{Content.DisplayUrl}\"&gt;Review&lt;/a&gt;\r\n&lt;br /&gt;\r\n&lt;a href=\"{Site.BaseUrl}/Form100/Reviews/{Content.Id}/{Review.Next.Approving}\"&gt;Approve&lt;/a&gt;\r\n&lt;br /&gt;\r\n&lt;a href=\"{Site.BaseUrl}/Form100/Reviews/{Content.Id}/{Review.Next.Rejecting}\"&gt;Reject&lt;/a&gt;\r\n&lt;/p&gt;"}</State>
+        <Activity Id="15" Name="SendEmail" Start="false" X="920" Y="123">
+          <State>{"Recipients":"{Review.Next.Email}","Subject":"Form 100 review","Body":"&lt;p&gt;Hello {Review.Next.Name},&lt;/p&gt;\r\n\r\n&lt;p&gt;Your review of a ({Review.State}) Form 100 for {Employee.Name} is requested.&lt;/p&gt;\r\n\r\n&lt;p&gt;\r\n&lt;a href=\"http://localhost:30321/{Content.DisplayUrl}\"&gt;Review&lt;/a&gt;\r\n&lt;br /&gt;\r\n&lt;a href=\"{Site.BaseUrl}/Form100/Reviews/{Content.Id}/{Review.Next.Approving}\"&gt;Approve&lt;/a&gt;\r\n&lt;br /&gt;\r\n&lt;a href=\"{Site.BaseUrl}/Form100/Reviews/{Content.Id}/{Review.Next.Rejecting}\"&gt;Reject&lt;/a&gt;\r\n&lt;/p&gt;"}</State>
         </Activity>
-        <Activity Id="34" Name="MergeBranch" Start="false" X="761" Y="201">
+        <Activity Id="16" Name="MergeBranch" Start="false" X="761" Y="201">
           <State>{}</State>
         </Activity>
-        <Activity Id="35" Name="SendEmail" Start="false" X="922" Y="306">
+        <Activity Id="17" Name="SendEmail" Start="false" X="922" Y="306">
           <State>{"Recipients":"{Review.History.Emails}","Subject":"Form 100 complete","Body":"&lt;p&gt;Review team,&lt;/p&gt;\r\n\r\n&lt;p&gt;Thank for you for reviewing {Employee.Name}'s Form 100.&lt;/p&gt;\r\n\r\n&lt;p&gt;This email confirms that this Form 100 process is complete.&lt;/p&gt;"}</State>
+        </Activity>
+        <Activity Id="18" Name="WebRequest" Start="false" X="1096" Y="199">
+          <State>{"Url":"{Site.BaseUrl}/Form100/Reviews/SetNotifiedDate/{Review.Next.Id}","Verb":"GET","Headers":"","FormFormat":"Json","FormValues":""}</State>
+        </Activity>
+        <Activity Id="19" Name="Notify" Start="false" X="1084" Y="303">
+          <State>{"Notification":"Error","Message":"Error setting NotifiedDate for ReviewStep {Review.Next.Id}"}</State>
+        </Activity>
+        <Activity Id="20" Name="Notify" Start="false" X="1184" Y="303">
+          <State>{"Notification":"Information","Message":"NotifiedDate set on ReviewStep {Review.Next.Id}"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="29" SourceEndpoint="Done" DestinationActivityId="30" DestinationEndpoint="" />
-        <Transition SourceActivityId="30" SourceEndpoint="Undefined" DestinationActivityId="31" DestinationEndpoint="" />
-        <Transition SourceActivityId="30" SourceEndpoint="Rejected" DestinationActivityId="32" DestinationEndpoint="" />
-        <Transition SourceActivityId="30" SourceEndpoint="New" DestinationActivityId="34" DestinationEndpoint="" />
-        <Transition SourceActivityId="30" SourceEndpoint="InProgress" DestinationActivityId="34" DestinationEndpoint="" />
-        <Transition SourceActivityId="30" SourceEndpoint="Submitted" DestinationActivityId="34" DestinationEndpoint="" />
-        <Transition SourceActivityId="34" SourceEndpoint="Done" DestinationActivityId="33" DestinationEndpoint="" />
-        <Transition SourceActivityId="30" SourceEndpoint="Approved" DestinationActivityId="35" DestinationEndpoint="" />
+        <Transition SourceActivityId="11" SourceEndpoint="Done" DestinationActivityId="12" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="Undefined" DestinationActivityId="13" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="Rejected" DestinationActivityId="14" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="New" DestinationActivityId="16" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="InProgress" DestinationActivityId="16" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="Submitted" DestinationActivityId="16" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="Approved" DestinationActivityId="17" DestinationEndpoint="" />
+        <Transition SourceActivityId="15" SourceEndpoint="Done" DestinationActivityId="18" DestinationEndpoint="" />
+        <Transition SourceActivityId="18" SourceEndpoint="Error" DestinationActivityId="19" DestinationEndpoint="" />
+        <Transition SourceActivityId="18" SourceEndpoint="Success" DestinationActivityId="20" DestinationEndpoint="" />
+        <Transition SourceActivityId="16" SourceEndpoint="Done" DestinationActivityId="18" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
   </Workflows>

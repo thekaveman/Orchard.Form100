@@ -1,0 +1,36 @@
+﻿@using CSM.Form100.ViewModels;
+
+@{ Style.Include("display.css"); }
+
+<section>
+    <h2>Personnel Action</h2>
+
+    @{
+        var viewModel = Model.ContentPart as ActionPartViewModel;
+    }
+
+    <p>
+        <span class="label">Category: </span>
+        <span>@viewModel.Category</span>
+    </p>
+
+    @if (!String.IsNullOrEmpty(viewModel.EffectiveDate))
+    {
+        <p>
+            <span class="label">Effective Date: </span>
+            <span>@viewModel.EffectiveDate</span>
+        </p>
+    }
+
+    <p>
+        <span class="label">Type of Action: </span>
+        <span>@viewModel.Type</span>
+    </p>
+
+    @if (!String.IsNullOrEmpty(viewModel.Detail))
+    {
+        <p>
+            <span>@viewModel.Detail</span>
+        </p>
+    }
+</section>

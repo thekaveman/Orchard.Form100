@@ -1,31 +1,33 @@
 ﻿//a simple object generator for a reviewStep
-function reviewStep(name, email, approvingStatus, rejectingStatus, defaultStatus) {
+function reviewStep(name, email, targetStates, approvingState, rejectingState, defaultState) {
     return {
         Id: 0,
         ReviewPartIdentifier: "",
-        ApprovingStatus: approvingStatus,
-        RejectingStatus: rejectingStatus,
+        TargetStates: validReviewStates,
+        ApprovingState: approvingState,
+        RejectingState: rejectingState,
         ReviewerName: name,
         ReviewerEmail: email,
         ReviewDate: null,
-        ReviewDecision: defaultStatus
+        ReviewDecision: defaultState
     };
 }
 
 //a knockout view model representing a review chain
-function reviewsViewModel(initChain, initStatuses, defaultStatus) {
+function reviewsViewModel(initChain, initStates, defaultState) {
     var self = this;
 
     self.reviews = ko.observableArray(initChain || []);
-    self.availableStatuses = ko.observableArray(initStatuses || []);
+    self.availableStates = ko.observableArray(initStates || []);
     self.name = ko.observable("");
     self.email = ko.observable("");
-    self.approvingStatus = ko.observable(defaultStatus);
-    self.rejectingStatus = ko.observable(defaultStatus);
+    self.targetStates = ko.observableArray([]);
+    self.approvingState = ko.observable(defaultState);
+    self.rejectingState = ko.observable(defaultState);
 
     self.stepToAdd = ko.computed(function () {
-        if (!(self.name() === "" || self.email() === "" || self.approvingStatus() === defaultStatus || self.rejectingStatus() === defaultStatus))
-            return reviewStep(self.name(), self.email().toLowerCase(), self.approvingStatus(), self.rejectingStatus());
+        if (!(self.name() === "" || self.email() === "" || self.targetStates() === [] || self.approvingState() === defaultState || self.rejectingState() === defaultState))
+            return reviewStep(self.name(), self.email().toLowerCase(), self.targetStates().join(","), self.approvingState(), self.rejectingState());
         else
             return null;
     });
@@ -40,16 +42,18 @@ function reviewsViewModel(initChain, initStatuses, defaultStatus) {
             self.reviews.push(step);
             self.name("");
             self.email("");
-            self.approvingStatus(defaultStatus);
-            self.rejectingStatus(defaultStatus);
+            self.targetStates([]);
+            self.approvingState(defaultState);
+            self.rejectingState(defaultState);
         }
     };
 
     self.editReviewStep = function () {
         self.name(this.ReviewerName);
         self.email(this.ReviewerEmail);
-        self.approvingStatus(this.ApprovingStatus);
-        self.rejectingStatus(this.RejectingStatus);
+        self.targetStates(this.TargetStates.split(","));
+        self.approvingState(this.ApprovingState);
+        self.rejectingState(this.RejectingState);
         self.reviews.remove(this);
     };
 

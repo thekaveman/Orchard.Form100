@@ -1,4 +1,4 @@
-while (Status is "Rejected" and there are additional reviews) or (Status is not "Accepted" or "Rejected")
+while (Status is Rejected and there are additional reviews) or (Status is not Accepted or Rejected)
 	
 	identify the next reviewer (R)
 	

@@ -27,6 +27,10 @@ namespace CSM.Form100.Collections
             this.reviewService = reviewService;
         }
 
+        /// <summary>
+        /// Adds a review step to the underlying collection, respecting the defined Order.
+        /// </summary>
+        /// <param name="item">The ReviewStepRecord to add.</param>
         public override void Add(ReviewStepRecord item)
         {
             if (item != default(ReviewStepRecord))
@@ -38,12 +42,16 @@ namespace CSM.Form100.Collections
             }
         }
 
+        /// <summary>
+        /// Removes and returns the next ReviewStepRecord in the underlying collection, respecting the defined Order.
+        /// </summary>
+        /// <returns>The next ReviewStepRecord in the collection, or default(ReviewStepRecord).</returns>
         public override ReviewStepRecord RemoveNext()
         {
             //remove the next item from the underlying collection
             var next = base.RemoveNext();
 
-            if(next != default(ReviewStepRecord))
+            if (next != default(ReviewStepRecord))
                 //update the backing record
                 serializeToTarget();
 
@@ -57,14 +65,14 @@ namespace CSM.Form100.Collections
         {
             return new ReviewChain(Order, null, null, this.AsEnumerable());
         }
-        
+
         /// <summary>
         /// Update the backing record with the current state of the ReviewChain
         /// </summary>
         private void serializeToTarget()
         {
             if (target != null && reviewService != null)
-            { 
+            {
                 //serialize to the appropriate record property
                 decide(
                     //pass a no-op for the list argument (never used)

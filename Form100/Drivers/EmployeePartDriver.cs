@@ -35,9 +35,11 @@ namespace CSM.Form100.Drivers
         /// </summary>
         protected override DriverResult Display(EmployeePart part, string displayType, dynamic shapeHelper)
         {
+            var viewModel = employeeService.GetEmployeeViewModel(part);
+
             return ContentShape(
                 "Parts_Employee",
-                () => shapeHelper.Parts_Employee(part)
+                () => shapeHelper.Parts_Employee(viewModel)
             );  
         }
 

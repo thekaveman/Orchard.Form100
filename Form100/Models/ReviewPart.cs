@@ -19,10 +19,10 @@ namespace CSM.Form100.Models
             get { return ReviewHistoryField.Value; }
         }
         
-        public WorkflowStatus Status
+        public WorkflowStatus State
         {
-            get { return Record.Status; }
-            set { Record.Status = value; }
+            get { return Record.State; }
+            set { Record.State = value; }
             //get { return Retrieve(r => r.Status); }
             //set { Store(r => r.Status, value); }
         }

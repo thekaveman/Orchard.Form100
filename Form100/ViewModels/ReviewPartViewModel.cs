@@ -8,7 +8,7 @@ namespace CSM.Form100.ViewModels
     public class ReviewPartViewModel
     {
         [Required]
-        public WorkflowStatus Status { get; set; }
+        public WorkflowStatus State { get; set; }
 
         [Required,
          RegularExpression(@"\[.+\]", ErrorMessage = "Please add at least one reviewer."),
@@ -18,15 +18,15 @@ namespace CSM.Form100.ViewModels
         [Display(Name = "Review History")]
         public string ReviewHistoryData { get; set; }
 
-        public string AvailableStatuses { get; private set; }
+        public string AvailableStates { get; private set; }
 
-        public WorkflowStatus DefaultStatus { get; private set; }
+        public WorkflowStatus DefaultState { get; private set; }
 
         public ReviewPartViewModel()
         {
-            Status = WorkflowStatus.New;
-            DefaultStatus = WorkflowStatus.Undefined;
-            AvailableStatuses = JsonConvert.SerializeObject(Enum.GetNames(typeof(WorkflowStatus)));
+            State = WorkflowStatus.New;
+            DefaultState = WorkflowStatus.Undefined;
+            AvailableStates = JsonConvert.SerializeObject(Enum.GetNames(typeof(WorkflowStatus)));
         }
     }
 }

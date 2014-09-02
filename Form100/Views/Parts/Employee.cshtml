@@ -1,0 +1,30 @@
+﻿@using CSM.Form100.ViewModels;
+
+@{ Style.Include("display.css"); }
+
+<section>
+    <h2>Employee Information</h2>
+
+    @{
+        var viewModel = Model.ContentPart as EmployeePartViewModel;
+    }
+
+    <p>
+        <span class="label">Employee: </span>
+        <span>@String.Format("{0} {1} (id {2})", viewModel.FirstName, viewModel.LastName, viewModel.EmployeeId)</span>
+    </p>
+
+    @if (viewModel.CurrentJobStep != null)
+    {
+        <section class="currentJobStep">
+            @Display(viewModel.CurrentJobStep)
+        </section>
+    }
+
+    @if (viewModel.PriorJobStep != null)
+    {
+        <section class="priorJobStep">
+            @Display(viewModel.PriorJobStep)
+        </section>
+    }
+</section>

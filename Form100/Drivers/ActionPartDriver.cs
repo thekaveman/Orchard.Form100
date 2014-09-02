@@ -34,9 +34,11 @@ namespace CSM.Form100.Drivers
         /// </summary>
         protected override DriverResult Display(ActionPart part, string displayType, dynamic shapeHelper)
         {
+            var viewModel = actionService.GetViewModel(part);
+
             return ContentShape(
                 "Parts_Action",
-                () => shapeHelper.Parts_Action(part)
+                () => shapeHelper.Parts_Action(viewModel)
             );
         }
 
