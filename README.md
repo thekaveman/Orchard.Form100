@@ -21,7 +21,7 @@ and extract it into a local working directory.
 	 This is important, it *must* match the name of the module given in the [Module manifest](Module.txt)
 
   4. Open the `Orchard.Source.1.8.1\src\Orchard.sln` file in VS2013, and 
-"Add Existing Project..." (`Form100.csproj`) to the solution. (Build the solution to ensure this worked).
+"Add Existing Project..." `CSM.Form100.csproj` to the solution. (Build the solution to ensure this worked).
 
 After completing the above steps, you will have a local development environment for this module. 
 Run the Orchard site and enable the `CSM.Form100` module as you would any other.
