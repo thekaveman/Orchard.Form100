@@ -80,6 +80,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitattributes" />
+    <Content Include=".gitignore" />
     <Content Include="Placement.info" />
     <Content Include="pseudocode.txt" />
     <Content Include="Recipes\Form100.recipe.xml" />
@@ -189,6 +191,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\JobStepRecordViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
