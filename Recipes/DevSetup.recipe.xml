@@ -2,7 +2,18 @@
 <Orchard>
   <Recipe>
     <Name>Development</Name>
-    <Description>A recipe based on the default for rapidly creating an Orchard instance for development purposes.</Description>
+    <Description>
+      A recipe based on the default for rapidly creating an Orchard instance for development purposes.
+      Some non-standard, but useful modules are enabled by default.
+      These include:
+      - Orchard.CodeGeneration
+      - Orchard.Email
+      - Orchard.ImportExport
+      - Orchard.Scripting (and Orchard.Scripting.CSharp)
+      - Orchard.Workflows
+      - PackagingServices and Orchard.Packaging
+      - CSM.Form100 (this module)
+    </Description>
     <Author>City of Santa Monica</Author>
     <WebSite>http://www.smgov.net</WebSite>
     <Tags></Tags>
@@ -12,9 +23,10 @@
   <Feature enable="Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
                    TinyMce,Orchard.ContentPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.ContentTypes,
-                   Orchard.Scripting,Orchard.Scripting.Lightweight,Orchard.Scripting.CSharp,PackagingServices,Orchard.Packaging,
-                   Orchard.Fields,Orchard.OutputCache,Orchard.Taxonomies,Orchard.Workflows,
-                   TheThemeMachine,Orchard.Email,Orchard.ImportExport,Orchard.CodeGeneration,CSM.Form100" />
+                   Orchard.Scripting,Orchard.Scripting.Lightweight,Orchard.Scripting.CSharp,
+                   PackagingServices,Orchard.Packaging,Orchard.Fields,Orchard.OutputCache,
+                   Orchard.Taxonomies,Orchard.Workflows,TheThemeMachine,
+                   Orchard.Email,Orchard.ImportExport,Orchard.CodeGeneration,CSM.Form100" />
 
   <Metadata>
     <Types>
